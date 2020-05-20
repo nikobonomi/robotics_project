@@ -1,5 +1,7 @@
 import socket
-import threading
+
+from messaging.threads.IncomingMessagesThread import IncomingMessagesThread
+from messaging.threads.PublishMessagesThread import PublishingMessagesThread
 
 SERVER = "127.0.0.1"
 PORT = 2020
@@ -32,33 +34,3 @@ class MessagingClient:
         # chiamo tutti i listener passando il nuovo messaggio raw
         for listener in self.listeners:
             listener(message)
-
-
-class IncomingMessagesThread(threading.Thread):
-    def __init__(self, client, function_callback):
-        threading.Thread.__init__(self)
-        self.callback = function_callback
-        self.client = client
-
-    def run(self):
-        while True:
-            in_data = self.client.recv(1024)
-            # se c'è un nuovo messaggio lo passo alla callback
-            self.callback(in_data.decode())
-
-
-class PublishingMessagesThread(threading.Thread):
-    def __init__(self, client):
-        threading.Thread.__init__(self)
-        self.messagesQueue = []
-        self.client = client
-
-    def add_to_queue(self, message):
-        self.messagesQueue.append(message)
-
-    def run(self):
-        while True:
-            # se c'è qualcosa in coda lo mando, se no skippo
-            if len(self.messagesQueue) > 0:
-                # estraggo il più vecchio messaggio in coda (FIFO)
-                self.client.sendall(bytes(self.messagesQueue.pop(0), 'UTF-8'))
