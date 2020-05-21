@@ -14,8 +14,11 @@ class RateKeeper:
     def wait_cycle(self):
         # calcolo la differenza dall'ultima esecuzione a quella corrente
         difference = RateKeeper.get_current_ts() - self.last_run_ms
+        # calcolo il tempo rimanente da aspettare
+        wait_time = self.sleep_duration-difference
+
         # se c'è del tempo da aspettare aspetto
-        if difference > 0:
-            time.sleep(difference/1000)
+        if wait_time > 0 :
+            time.sleep(wait_time/1000)
 
         self.last_run_ms = RateKeeper.get_current_ts()
