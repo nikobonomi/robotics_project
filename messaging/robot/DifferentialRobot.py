@@ -10,6 +10,8 @@ class DifferentialRobot:
         # self.y = 0
         # self.theta = 0
         self.pose = np.eye(3)
+        # todo: capire come tirare fuori la posa in x, y e z da sta matrice... sicuramente è una cazzata
+
         # velocità lineare e angolare
         self.linear_vel = 0  # per andare avanti o indietro
         self.angular_vel = 0  # per girarsi a destra o sinistra
