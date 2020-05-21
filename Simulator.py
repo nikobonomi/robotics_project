@@ -3,23 +3,33 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from messaging.MessagingServer import MessagingServer
-
+from messaging.robot.DifferentialRobot import DifferentialRobot
 
 
 class Simulator:
     def __init__(self):
-        self._position = 0
-        self._speed = 1
-        self._clock = ClockManager(1, self._step)
+        self._clock = ClockManager(2, self._step)
         self.messaging = MessagingServer()
+        # inizializzo un nuovo robot
+        self.robot = DifferentialRobot(0.1)
+        self.robot.vel_left = 0.2
+        self.robot.vel_right = 0.3
+        fig = plt.figure()
+        self.ax = fig.add_subplot()
+        # stampo lo stato iniziale
         self.draw_frame(np.eye(3))  # disegno il frame di riferimento
+        self.robot.draw_robot()
+        plt.axis("equal")
+        plt.show()
 
     def _step(self):
-        self._position += self._speed
-        self.print_position()
+        self.robot.simulate_dt(2)
 
-    def print_position(self):
-        print("My position is %d" % self._position)
+        self.draw_frame(np.eye(3))  # disegno il frame di riferimento
+        self.robot.draw_robot()
+        plt.axis("equal")
+        plt.show()
+
 
     @staticmethod
     def draw_frame(f, ax=None, name=None):
