@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+# questo non va bene, da rivedere
 
-class DifferentialRobot:
+class TurtleRobot:
 
     def __init__(self, length):
         # posa del robot
@@ -13,8 +14,8 @@ class DifferentialRobot:
         # todo: capire come tirare fuori la posa in x, y e z da sta matrice... sicuramente è una cazzata
 
         # velocità lineare e angolare
-        self.vel_left = 0  # per andare avanti o indietro
-        self.vel_right = 0  # per girarsi a destra o sinistra
+        self.vel_linear = 0  # per andare avanti o indietro
+        self.vel_angular = 0  # per girarsi a destra o sinistra
 
         self.length = length  # larghezza dell'asse
 
@@ -22,18 +23,16 @@ class DifferentialRobot:
         """ returns the pose transform for a motion with duration dt of a differential
         drive robot with wheel speeds vel_left and vel_right and wheelbase length """
 
-        # se le velocità delle due ruote sono uguali allora va dritto
-        if np.isclose(self.vel_left, self.vel_right):
-            transformation_matrix = self.mk_tr((self.vel_left + self.vel_right) / 2 * dt, 0)  # note we translate along x ()
+        # if we are moving straight, R is at the infinity and we handle this case separately
+        if self.vel_angular == 0:
+            transformation_matrix = self.mk_tr(self.vel_linear * dt, 0)
         else:
-            # altrimenti calcola omega che è la velocità angolare
-            omega = (self.vel_right - self.vel_left) / (2 * self.length)
-            # e il raggio della rotazione + la distanza
+            omega = (self.vel_right - self.vel_left) / (2 * self.length)  # angular speed of the robot frame
             r = self.length * (self.vel_right + self.vel_left) / (self.vel_right - self.vel_left)
 
+            # calcola la nuova pose
             transformation_matrix = self.mk_tr(0, r) @ self.mk_rot(omega * dt) @ self.mk_tr(0, -r)
 
-        # calcola la nuova posa del robot
         self.pose = self.pose @ transformation_matrix
 
     @staticmethod
