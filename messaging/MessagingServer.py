@@ -16,7 +16,7 @@ class MessagingServer:
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server.bind((LOCALHOST, PORT))
         print("Server started")
-        self.connection_watcher = ClientConnectionWatcher(server,self.handle_new_client)
+        self.connection_watcher = ClientConnectionWatcher(server, self.handle_new_client)
         self.connection_watcher.start()
         self.connected_clients = []
 
@@ -24,9 +24,8 @@ class MessagingServer:
         self.subscriber = function
 
     def handle_client_message(self, message):
-        print("client message " + message)
-        # if self.subscriber is not None:
-        #     self.subscriber(message)
+        if self.subscriber is not None:
+            self.subscriber(message)
 
     def handle_new_client(self, client_handler):
         self.connected_clients.append(client_handler)
@@ -81,7 +80,3 @@ class ClientHandler:
         # chiamo tutti i listener passando il nuovo messaggio raw
         for listener in self.listeners:
             listener(message)
-
-
-
-
