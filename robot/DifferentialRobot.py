@@ -1,16 +1,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import math
+
+from utils import MatrixTr
 
 
 class DifferentialRobot:
 
     def __init__(self, length):
         # posa del robot
-        # self.x = 0
-        # self.y = 0
-        # self.theta = 0
         self.pose = np.eye(3)
-        # todo: capire come tirare fuori la posa in x, y e z da sta matrice... sicuramente è una cazzata
 
         # velocità lineare e angolare
         self.vel_left = 0  # per andare avanti o indietro
@@ -19,34 +18,33 @@ class DifferentialRobot:
         self.length = length  # larghezza dell'asse
 
     def simulate_dt(self, dt):
-        """ returns the pose transform for a motion with duration dt of a differential
-        drive robot with wheel speeds vel_left and vel_right and wheelbase length """
+        # simula il movimento del robot per durate dt aggiornandone la posa
 
         # se le velocità delle due ruote sono uguali allora va dritto
         if np.isclose(self.vel_left, self.vel_right):
-            transformation_matrix = self.mk_tr((self.vel_left + self.vel_right) / 2 * dt, 0)  # note we translate along x ()
+            transformation_matrix = MatrixTr.mk_tr((self.vel_left + self.vel_right) / 2 * dt, 0)  # note we translate along x ()
         else:
             # altrimenti calcola omega che è la velocità angolare
             omega = (self.vel_right - self.vel_left) / (2 * self.length)
             # e il raggio della rotazione + la distanza
             r = self.length * (self.vel_right + self.vel_left) / (self.vel_right - self.vel_left)
 
-            transformation_matrix = self.mk_tr(0, r) @ self.mk_rot(omega * dt) @ self.mk_tr(0, -r)
+            transformation_matrix = MatrixTr.mk_tr(0, r) @ MatrixTr.mk_rot(omega * dt) @ MatrixTr.mk_tr(0, -r)
 
         # calcola la nuova posa del robot
         self.pose = self.pose @ transformation_matrix
 
-    @staticmethod
-    def mk_tr(x, y):
-        return np.array([[1, 0, x],
-                         [0, 1, y],
-                         [0, 0, 1]])
+    def get_cartesian_pose(self):
+        # estraggo la posa dalla matrice
+        x = self.pose[0, 2]
+        y = self.pose[1, 2]
+        theta = math.acos(self.pose[0, 0])
+        return x, y, theta
 
     @staticmethod
-    def mk_rot(theta):
-        return np.array([[np.cos(theta), -np.sin(theta), 0],
-                         [np.sin(theta),  np.cos(theta), 0],
-                         [0,              0,             1]])
+    def get_robot_draw_points():
+        # in questo punto l'origine sta a 0,0
+        return [-10, -10, 10, -10, 0, 10]
 
     # lo mette in posizione x e y con angolazione theta
     # sfruttanto la matrice pose
