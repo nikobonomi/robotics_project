@@ -1,15 +1,13 @@
-import matplotlib.pyplot as plt
 import numpy as np
-import math
 
+from robot.TwoDRobot import TwoDRobot
 from utils import MatrixTr
 
 
-class DifferentialRobot:
+class DifferentialRobot(TwoDRobot):
 
     def __init__(self, length):
-        # posa del robot
-        self.pose = np.eye(3)
+        TwoDRobot.__init__(self)
 
         # velocità lineare e angolare
         self.vel_left = 0  # per andare avanti o indietro
@@ -34,48 +32,40 @@ class DifferentialRobot:
         # calcola la nuova posa del robot
         self.pose = self.pose @ transformation_matrix
 
-    def get_cartesian_pose(self):
-        # estraggo la posa dalla matrice
-        x = self.pose[0, 2]
-        y = self.pose[1, 2]
-        theta = math.acos(self.pose[0, 0])
-        return x, y, theta
-
-    @staticmethod
-    def get_robot_draw_points():
+    def get_robot_draw_points(self):
         # in questo punto l'origine sta a 0,0
-        return [-10, -10, 10, -10, 0, 10]
+        return [-10, -10, 0, -10, 10, 0, 0, 10, -10, 10]
 
-    # lo mette in posizione x e y con angolazione theta
-    # sfruttanto la matrice pose
-    def draw_robot(self, ax=None, alpha=0.5):
-        """ Draw robot at f, with wheel distance from center l,
-        on axis ax (if provided) or on plt.gca() otherwise.
-        if l is None, no wheels are drawn"""
-
-        # f = self.mk_tr(self.x, self.y) @ self.mk_rot(self.theta)
-        f = self.pose
-
-        if not ax:
-            ax = plt.gca()
-
-        robot = ([[-1, 2, -1, -1],  # x
-                  [-1, 0, 1, -1]])  # y
-        robot = np.array(robot)
-        robot = np.vstack((
-            robot * 0.1,  # scale by 0.1 units
-            np.ones((1, robot.shape[1]))))
-
-        robot_t = f @ robot
-
-        wheel_l = np.array([
-            [-0.05, 0.05],
-            [self.length, self.length],
-            [1, 1]
-        ])
-        wheel_r = wheel_l * np.array([[1, -1, 1]]).T
-        wheel_lt = f @ wheel_l
-        wheel_rt = f @ wheel_r
-        ax.plot(robot_t[0, :], robot_t[1, :], 'k-', alpha=alpha)
-        ax.plot(wheel_lt[0, :], wheel_lt[1, :], 'k-', alpha=alpha)
-        ax.plot(wheel_rt[0, :], wheel_rt[1, :], 'k-', alpha=alpha)
+    # # lo mette in posizione x e y con angolazione theta
+    # # sfruttanto la matrice pose
+    # def draw_robot(self, ax=None, alpha=0.5):
+    #     """ Draw robot at f, with wheel distance from center l,
+    #     on axis ax (if provided) or on plt.gca() otherwise.
+    #     if l is None, no wheels are drawn"""
+    #
+    #     # f = self.mk_tr(self.x, self.y) @ self.mk_rot(self.theta)
+    #     f = self.pose
+    #
+    #     if not ax:
+    #         ax = plt.gca()
+    #
+    #     robot = ([[-1, 2, -1, -1],  # x
+    #               [-1, 0, 1, -1]])  # y
+    #     robot = np.array(robot)
+    #     robot = np.vstack((
+    #         robot * 0.1,  # scale by 0.1 units
+    #         np.ones((1, robot.shape[1]))))
+    #
+    #     robot_t = f @ robot
+    #
+    #     wheel_l = np.array([
+    #         [-0.05, 0.05],
+    #         [self.length, self.length],
+    #         [1, 1]
+    #     ])
+    #     wheel_r = wheel_l * np.array([[1, -1, 1]]).T
+    #     wheel_lt = f @ wheel_l
+    #     wheel_rt = f @ wheel_r
+    #     ax.plot(robot_t[0, :], robot_t[1, :], 'k-', alpha=alpha)
+    #     ax.plot(wheel_lt[0, :], wheel_lt[1, :], 'k-', alpha=alpha)
+    #     ax.plot(wheel_rt[0, :], wheel_rt[1, :], 'k-', alpha=alpha)

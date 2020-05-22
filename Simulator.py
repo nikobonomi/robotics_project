@@ -1,32 +1,30 @@
 from ClockManager import ClockManager
-import numpy as np
-import matplotlib.pyplot as plt
 
+from Graphics import SreGui
 from messaging.MessagingServer import MessagingServer
 from robot.DifferentialRobot import DifferentialRobot
+from utils.RateKeeper import RateKeeper
 
+RATE = 20 #hz
 
 class Simulator:
     def __init__(self):
+
         self.messaging = MessagingServer()
         # faccio la subscription agli update dei client
         self.messaging.subscribe(self.handle_client_message)
 
         # inizializzo un nuovo robot
-        self.robot = DifferentialRobot(0.1)
-        self.robot.vel_left = 0.2
-        self.robot.vel_right = 0.3
-        fig = plt.figure()
-        self.ax = fig.add_subplot()
+        self.robot = DifferentialRobot(1)
+        self.robot.vel_left = 10
+        self.robot.vel_right = 11
 
-        # stampo lo stato iniziale
-        self.draw_frame(np.eye(3))  # disegno il frame di riferimento
-        self.robot.draw_robot()
-        plt.axis("equal")
-        plt.show()
+        self.gui = SreGui()
+        self.gui.new_robot(self.robot)
 
         # inizializzo il clock manager
-        self._clock = ClockManager(1, self._step)
+        # self._clock = ClockManager(1, self._step)
+        self.rate = RateKeeper(RATE)
 
     def handle_client_message(self, message):
         # martellata paura, ma almeno provo a cambiare i parametri del robot
@@ -40,24 +38,17 @@ class Simulator:
         self.robot.vel_right = float(vel_right)
         print("new vels: " + str(vel_left) + " " + str(vel_right))
 
+    def run(self):
+        while True:
+            self.robot.simulate_dt(1/RATE)
+            self.gui.step_gui()
+            self.rate.wait_cycle()
+
     def _step(self):
         self.robot.simulate_dt(1)
-
-        self.draw_frame(np.eye(3))  # disegno il frame di riferimento
-        self.robot.draw_robot()
-        plt.axis("equal")
-        plt.show()
+        print("step")
+        self.gui.step_gui()
 
 
-    @staticmethod
-    def draw_frame(f, ax=None, name=None):
-        """ Draw frame defined by f on axis ax (if provided) or on plt.gca() otherwise """
-        x_hat = f @ np.array([[0, 0, 1], [1, 0, 1]]).T
-        y_hat = f @ np.array([[0, 0, 1], [0, 1, 1]]).T
-        if not ax:
-            ax = plt.gca()
-        ax.plot(x_hat[0, :], x_hat[1, :], 'r-')  # transformed x unit vector
-        ax.plot(y_hat[0, :], y_hat[1, :], 'g-')  # transformed y unit vector
-        if name:
-            ax.text(x_hat[0, 0], x_hat[1, 0], name, va="top", ha="center")
+
 
