@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from messaging.MessagingServer import MessagingServer
-from messaging.robot.DifferentialRobot import DifferentialRobot
+from robot.DifferentialRobot import DifferentialRobot
 
 
 class Simulator:

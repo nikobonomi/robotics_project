@@ -1,7 +1,6 @@
 from messaging.MessagingClient import MessagingClient
 from messaging.messages.Velocity import Velocity
-from messaging.utils.RateKeeper import RateKeeper
-import time
+from utils import RateKeeper
 
 
 class Controller:
