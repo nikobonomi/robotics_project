@@ -1,5 +1,7 @@
 import threading
 
+from messaging.messages.Message import Message
+
 
 class IncomingMessagesThread(threading.Thread):
     def __init__(self, socket, function_callback):
@@ -11,4 +13,4 @@ class IncomingMessagesThread(threading.Thread):
         while True:
             in_data = self.socket.recv(1024)
             # se c'è un nuovo messaggio lo passo alla callback
-            self.callback(in_data.decode())
+            self.callback(Message.deserialize(in_data))

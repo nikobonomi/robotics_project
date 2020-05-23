@@ -3,15 +3,14 @@ import pickle
 
 
 class Message(object):
-    def __init__(self):
-        self.values: Dict = {}
-        self.serialized: bytes = b''
 
     def serialize(self):
-        self.serialized = pickle.dumps(self.values)
+        return pickle.dumps(self)
 
-    def deserialize(self):
-        self.values = pickle.loads(self.serialized)
+    @staticmethod
+    def deserialize(data: bytes):
+        message = Message
+        message.values = pickle.loads(data)
 
     def to_string(self):
         raise NotImplementedError

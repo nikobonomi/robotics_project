@@ -1,5 +1,6 @@
 import socket
 
+from messaging.messages.Message import Message
 from messaging.threads.IncomingMessagesThread import IncomingMessagesThread
 from messaging.threads.PublishMessagesThread import PublishingMessagesThread
 
@@ -26,11 +27,11 @@ class MessagingClient:
         self.listeners.append(function)
 
     # publico un messaggio al server
-    def publish_message(self, message):
+    def publish_message(self, message: Message):
         self.message_publisher.add_to_queue(message)
 
-    # gestisco l'arrivo di u nuovo messaggio
-    def handle_message(self, message):
+    # gestisco l'arrivo di un nuovo messaggio
+    def handle_message(self, message: Message):
         # chiamo tutti i listener passando il nuovo messaggio raw
         for listener in self.listeners:
             listener(message)

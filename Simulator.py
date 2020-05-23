@@ -1,6 +1,7 @@
 
 from Graphics import SreGui
 from messaging.MessagingServer import MessagingServer
+from messaging.messages.TwoDPose import TwoDPose
 from robot.TurtleRobot import TurtleRobot
 from utils.RateKeeper import RateKeeper
 
@@ -29,26 +30,30 @@ class Simulator:
         self.rate = RateKeeper(RATE)
 
     def handle_client_message(self, message):
-        # martellata paura, ma almeno provo a cambiare i parametri del robot
-        # so che il tipo di messaggio è uno solo, quindi splitto per estrarre i valori
-        # ho messo la velocità sinistra in X e quella destra in Y
-        # esempio: MSG_VEL X=0.3 Y=0.4 T=0
-        data = message.split(" ")
-        vel_left = data[1].split("=")[1]
-        vel_right = data[2].split("=")[1]
-        self.robot.vel_left = float(vel_left)
-        self.robot.vel_right = float(vel_right)
-        print("new vels: " + str(vel_left) + " " + str(vel_right))
+        print(message)
+        # # martellata paura, ma almeno provo a cambiare i parametri del robot
+        # # so che il tipo di messaggio è uno solo, quindi splitto per estrarre i valori
+        # # ho messo la velocità sinistra in X e quella destra in Y
+        # # esempio: MSG_VEL X=0.3 Y=0.4 T=0
+        # data = message.split(" ")
+        # vel_left = data[1].split("=")[1]
+        # vel_right = data[2].split("=")[1]
+        # self.robot.vel_left = float(vel_left)
+        # self.robot.vel_right = float(vel_right)
+        # print("new vels: " + str(vel_left) + " " + str(vel_right))
 
     def publish_pose(self):
-
-        self.messaging.publish_to_all("")
+        pose = TwoDPose()
+        pose.x = self.robot.get_cartesian_pose().x
+        pose.y = self.robot.get_cartesian_pose().y
+        pose.theta = self.robot.get_cartesian_pose().theta
+        self.messaging.publish_to_all(pose)
 
     def run(self):
         while True:
             self.robot.simulate_dt(1/RATE)
             self.gui.step_gui()
-            self.publish_poses()
+            self.publish_pose()
             self.rate.wait_cycle()
 
     def _step(self):
