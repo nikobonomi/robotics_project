@@ -46,7 +46,7 @@ class TurtleRobot(TwoDRobot):
             #
             # transformation_matrix = MatrixTr.mk_tr(0, r) @ MatrixTr.mk_rot(omega * dt) @ MatrixTr.mk_tr(0, -r)
 
-            transformation_matrix = self.mk_tr(0, r) @ self.mk_rot(self.vel_angular * dt) @ self.mk_tr(0, -r)
+            transformation_matrix = self.mk_tr(self.vel_linear * dt, 0) @ self.mk_rot(self.vel_angular * dt)
 
         self.pose = self.pose @ transformation_matrix
 
