@@ -1,8 +1,6 @@
-from ClockManager import ClockManager
 
 from Graphics import SreGui
 from messaging.MessagingServer import MessagingServer
-from robot.DifferentialRobot import DifferentialRobot
 from robot.TurtleRobot import TurtleRobot
 from utils.RateKeeper import RateKeeper
 
@@ -42,10 +40,15 @@ class Simulator:
         self.robot.vel_right = float(vel_right)
         print("new vels: " + str(vel_left) + " " + str(vel_right))
 
+    def publish_pose(self):
+
+        self.messaging.publish_to_all("")
+
     def run(self):
         while True:
             self.robot.simulate_dt(1/RATE)
             self.gui.step_gui()
+            self.publish_poses()
             self.rate.wait_cycle()
 
     def _step(self):

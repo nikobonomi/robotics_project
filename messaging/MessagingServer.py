@@ -27,6 +27,10 @@ class MessagingServer:
         if self.subscriber is not None:
             self.subscriber(message)
 
+    def publish_to_all(self, message):
+        for client in self.connected_clients:
+            client.publish_message(message)
+
     def handle_new_client(self, client_handler):
         self.connected_clients.append(client_handler)
         client_handler.add_listener(self.handle_client_message)
