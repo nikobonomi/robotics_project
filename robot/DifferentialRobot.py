@@ -6,16 +6,16 @@ from utils import MatrixTr
 
 class DifferentialRobot(TwoDRobot):
 
-    def __init__(self, length):
-        TwoDRobot.__init__(self)
+    def __init__(self, length: int, vertex: [] = None):
+        TwoDRobot.__init__(self, vertex)
 
         # velocità lineare e angolare
         self.vel_left = 0  # per andare avanti o indietro
         self.vel_right = 0  # per girarsi a destra o sinistra
 
-        self.length = length  # larghezza dell'asse
+        self.length: int = length  # larghezza dell'asse
 
-    def simulate_dt(self, dt):
+    def simulate_dt(self, dt: int):
         # simula il movimento del robot per durate dt aggiornandone la posa
 
         # se le velocità delle due ruote sono uguali allora va dritto
@@ -31,10 +31,6 @@ class DifferentialRobot(TwoDRobot):
 
         # calcola la nuova posa del robot
         self.pose = self.pose @ transformation_matrix
-
-    def get_robot_draw_points(self):
-        # in questo punto l'origine sta a 0,0
-        return [-10, -10, 0, -10, 10, 0, 0, 10, -10, 10]
 
     # # lo mette in posizione x e y con angolazione theta
     # # sfruttanto la matrice pose

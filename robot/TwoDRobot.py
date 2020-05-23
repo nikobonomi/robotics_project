@@ -1,30 +1,31 @@
-# general class for any TwoDimensional Robot
+# generic class for any TwoDimensional Robot
 import numpy as np
 import math
 
 
-class TwoDRobot(object):
-    # def __init__(self, position, extremities):
-    #     self.position = position
-    #     self.extremities = extremities
+# estraggo la posa dalla matrice
+class TwoDCartesianPose(object):
+    def __init__(self, pose):
+        self.x = pose[0, 2]
+        self.y = pose[1, 2]
+        self.theta = -math.atan2(pose[0, 0], pose[1, 0]) + np.pi / 2
 
-    def __init__(self):
+
+class TwoDRobot(object):
+    def __init__(self, vertex: [] = None):
         # posa del robot
         self.pose = np.eye(3)
-        self.gui_element = None
 
-    def simulate_dt(self, dt):
-        pass
+        if vertex is None:
+            vertex = [-10, -10, 0, -10, 10, 0, 0, 10, -10, 10]
 
-    def get_cartesian_pose(self):
-        # estraggo la posa dalla matrice
-        x = self.pose[0, 2]
-        y = self.pose[1, 2]
-        theta = -math.atan2(self.pose[0, 0], self.pose[1, 0]) + np.pi/2
-        return x, y, theta
+        self._vertex = vertex
 
-    def get_robot_draw_points(self):
-        pass
+    def get_robot_draw_points(self) -> []:
+        return self._vertex
 
-    # def move(self, trans_matrix):
-    #     raise NotImplementedError()
+    def simulate_dt(self, dt: int):
+        raise NotImplementedError()
+
+    def get_cartesian_pose(self) -> TwoDCartesianPose:
+        return TwoDCartesianPose(self.pose)

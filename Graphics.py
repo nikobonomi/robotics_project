@@ -1,29 +1,28 @@
 import math
 import tkinter as tk
 import robot.TwoDRobot as Robot
-from typing import List
+from typing import Dict
 
 from robot.DifferentialRobot import DifferentialRobot
 
 
 class SreGui:
-    def __init__(self, w=800, h=600):
+    def __init__(self, w: int = 800, h: int = 600):
         self._root = tk.Tk()
-        self._width = w
-        self._height = h
+        self._width: int = w
+        self._height: int = h
         self._canvas = tk.Canvas(self._root, width=self._width, height=self._height)
         # così mette l'origine in centro al posto di in alto a sinistra
         self._canvas.configure(scrollregion=(-w / 2, -h / 2, w / 2, h / 2))
 
         self.draw_axis()
 
-        self._robots: List[Robot] = []
+        self._robots: Dict = {}
         # self._robot = self._canvas.create_polygon(w / 2, h / 2, w / 2 + 20, h / 2, w / 2 + 10, h / 2 - 20)
         self.update_canvas()
 
     def new_robot(self, robot: Robot):
-        self._robots.append(robot)
-        robot.gui_element = self._canvas.create_polygon(robot.get_robot_draw_points())
+        self._robots[robot] = self._canvas.create_polygon(robot.get_robot_draw_points())
         self.update_canvas()
 
     def draw_axis(self):
@@ -54,15 +53,15 @@ class SreGui:
 
     def step_gui(self):
 
-        for robot in self._robots:
-            x, y, theta = robot.get_cartesian_pose()
+        for robot in self._robots.keys():
+            cartesian_pose = robot.get_cartesian_pose()
             # calcolo la rotazione del robot all'origine
-            points = self.rotate(robot.get_robot_draw_points(), theta)
+            points = self.rotate(robot.get_robot_draw_points(), cartesian_pose.theta)
            # points = robot.get_robot_draw_points()
             # porto il robot all'origine con i punti ruotati
-            self._canvas.coords(robot.gui_element, points)
+            self._canvas.coords(self._robots[robot], points)
             # lo muovo al posto giusto
-            self._canvas.move(robot.gui_element, x, y)
+            self._canvas.move(self._robots[robot], cartesian_pose.x, cartesian_pose.y)
 
         self.update_canvas()
 
