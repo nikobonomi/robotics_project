@@ -3,6 +3,7 @@ from ClockManager import ClockManager
 from Graphics import SreGui
 from messaging.MessagingServer import MessagingServer
 from robot.DifferentialRobot import DifferentialRobot
+from robot.TurtleRobot import TurtleRobot
 from utils.RateKeeper import RateKeeper
 
 RATE = 20 #hz
@@ -15,9 +16,12 @@ class Simulator:
         self.messaging.subscribe(self.handle_client_message)
 
         # inizializzo un nuovo robot
-        self.robot = DifferentialRobot(1)
-        self.robot.vel_left = 10
-        self.robot.vel_right = 11
+        # self.robot = DifferentialRobot(1)
+        # self.robot.vel_left = 10
+        # self.robot.vel_right = 11
+        self.robot = TurtleRobot()
+        self.robot.vel_linear = 1
+        self.robot.vel_angular = 1
 
         self.gui = SreGui()
         self.gui.new_robot(self.robot)
