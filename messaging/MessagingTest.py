@@ -1,3 +1,4 @@
+import time
 from random import randrange
 
 from ClockManager import ClockManager
@@ -14,13 +15,11 @@ def send_message():
 
 
 def print_message(msg: Pose):
-    print("x is "+str(msg.x))
-    print("y is "+str(msg.y))
-    print("theta is "+str(msg.theta))
-    print(msg.to_string())
+    print(str(msg))
 
 
 server = MessagingServer()
+time.sleep(1)
 client = MessagingClient()
 client.add_listener(print_message)
 clock = ClockManager(1, send_message)
