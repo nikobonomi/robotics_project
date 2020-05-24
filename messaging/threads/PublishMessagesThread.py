@@ -1,6 +1,8 @@
 import threading
 import pickle
 
+HEADERSIZE = 10
+
 
 class PublishingMessagesThread(threading.Thread):
     def __init__(self, socket):
@@ -18,7 +20,14 @@ class PublishingMessagesThread(threading.Thread):
                 # estraggo il più vecchio messaggio in coda (FIFO)
                 # creo la lista di bytes
                 message_bytes = pickle.dumps(self.messagesQueue.pop(0))
+
+                full_message = bytes(f"{len(message_bytes):<{HEADERSIZE}}", 'utf-8') + message_bytes
+
                 # aggiungo davanti 2 bytes che identificano la lunghezza
-                message_bytes = len(message_bytes).to_bytes(2, byteorder='big') + message_bytes
+                #message_bytes = len(message_bytes).to_bytes(2, byteorder='big') + message_bytes
                 # mando il messaggio
-                self.socket.sendall(message_bytes)
+                try:
+                    self.socket.send(full_message)
+                    break
+                except BrokenPipeError:
+                    print("Socket Error")

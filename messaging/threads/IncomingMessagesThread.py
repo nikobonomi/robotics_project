@@ -1,6 +1,8 @@
 import threading
 import pickle
 
+HEADERSIZE = 10
+
 
 class IncomingMessagesThread(threading.Thread):
     def __init__(self, socket, function_callback):
@@ -10,15 +12,26 @@ class IncomingMessagesThread(threading.Thread):
 
     def run(self):
         while True:
-            # leggo i primi 2 bytes che identificano la lunghezza del messaggio
-            message_length_bytes = b''
-            for i in range(2):
-                message_length_bytes += self.socket.recv(1)
-            message_length = int.from_bytes(message_length_bytes, byteorder='big')
-            # leggo tutti gli altri e compongo il messaggio
-            # print("new message of length: " + str(message_length))
-            message_bytes = b''
-            for i in range(message_length):
-                message_bytes += self.socket.recv(1)
-            # mando il messaggio agli ascoltatori
-            self.callback(pickle.loads(message_bytes))
+            full_message = b''
+            msg = b''
+            is_new_message = True
+            msg_len = 0
+
+            while True:
+                try:
+                    msg = self.socket.recv(16)
+                    break
+                except ConnectionAbortedError:
+                    pass
+
+                if is_new_message:
+                    msg_len = int(msg[:HEADERSIZE])
+                    is_new_message = False
+
+                full_message += msg
+
+                if len(full_message)-HEADERSIZE == msg_len:
+                    self.callback(pickle.loads(full_message[HEADERSIZE:]))
+
+                    is_new_message = True
+                    full_message = b''

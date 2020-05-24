@@ -41,15 +41,15 @@ class MessagingServer:
 # thread che aspetta la connessione di un nuovo client
 class ClientConnectionWatcher(threading.Thread):
 
-    def __init__(self, server, new_client_callback):
+    def __init__(self, server: socket, new_client_callback):
         threading.Thread.__init__(self)
-        self.server = server
+        self.server: socket = server
         self.new_client_callback = new_client_callback
 
     def run(self):
         print("Waiting for client request..")
         while True:
-            self.server.listen(1)
+            self.server.listen()
             # rimango in attesa di una connessione
             client_sock, client_address = self.server.accept()
             # creo un handler per il client
