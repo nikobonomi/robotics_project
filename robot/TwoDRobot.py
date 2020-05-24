@@ -6,9 +6,9 @@ import math
 # estraggo la posa dalla matrice
 class TwoDCartesianPose(object):
     def __init__(self, pose):
-        self.x = pose[0, 2]
-        self.y = pose[1, 2]
-        self.theta = -math.atan2(pose[0, 0], pose[1, 0]) + np.pi / 2
+        self.x = np.around(pose[0, 2], decimals=2)
+        self.y = np.around(pose[1, 2], decimals=2)
+        self.theta = np.around(-math.atan2(pose[0, 0], pose[1, 0]) + np.pi / 2, decimals=5)
 
 
 class TwoDRobot(object):
