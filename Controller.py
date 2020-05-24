@@ -17,17 +17,15 @@ class Controller:
         # quando il contatore arriva a 10 cambia la vel di una ruota
         if self.counter % 5 == 0:
             vel = Velocity()
-            vel.x = 10
-            vel.y = 10
-            vel.theta = 0
-            self.messaging.publish_message(vel.get_message_string())
+            vel.linear = 10
+            vel.angular = 0
+            self.messaging.publish_message(vel)
             print("mando messaggio al server")
         elif self.counter % 9 == 0:
             vel = Velocity()
-            vel.x = 13
-            vel.y = 12
-            vel.theta = 0
-            self.messaging.publish_message(vel.get_message_string())
+            vel.linear = 10
+            vel.angular = -1
+            self.messaging.publish_message(vel)
             print("mando messaggio al server")
         self.counter = self.counter + 1
         self.rate.wait_cycle()
