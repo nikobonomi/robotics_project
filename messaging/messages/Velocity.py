@@ -9,5 +9,5 @@ class Velocity(Message):
         self.y = 0
         self.theta = 0
 
-    def to_string(self):
+    def __str__(self):
         return "MSG_VEL X=" + str(self.x) + " Y=" + str(self.y) + " T=" + str(self.theta)
