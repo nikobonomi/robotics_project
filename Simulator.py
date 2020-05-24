@@ -20,8 +20,6 @@ class Simulator:
         # self.robot.vel_left = 10
         # self.robot.vel_right = 11
         self.robot = TurtleRobot()
-        self.robot.vel_linear = 10
-        self.robot.vel_angular = 0
 
         self.gui = SreGui()
         self.gui.new_robot(self.robot)
@@ -31,7 +29,7 @@ class Simulator:
         self.rate = RateKeeper(RATE)
 
     def handle_client_message(self, message):
-        print(message)
+        #print(message)
         # per il momento c'è solo 1 robot... il tartaruga
         # quindi mi assicuro di ricevere un messaggio che sia adatto a quel robot
         if message.is_type(Velocity):

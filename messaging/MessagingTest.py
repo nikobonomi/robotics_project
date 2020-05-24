@@ -4,17 +4,18 @@ from random import randrange
 from ClockManager import ClockManager
 from messaging.MessagingClient import MessagingClient
 from messaging.MessagingServer import MessagingServer
-from messaging.messages.Pose import Pose
+from messaging.messages import Message
+from messaging.messages.TwoDPose import TwoDPose
 
 
 def send_message():
-    msg = Pose()
+    msg = TwoDPose()
     msg.x = 10
     msg.y = randrange(5, 15)
     server.publish_to_all(msg)
 
 
-def print_message(msg: Pose):
+def print_message(msg: Message):
     print(str(msg))
 
 
