@@ -1,4 +1,5 @@
 import threading
+import pickle
 
 
 class IncomingMessagesThread(threading.Thread):
@@ -11,4 +12,4 @@ class IncomingMessagesThread(threading.Thread):
         while True:
             in_data = self.socket.recv(1024)
             # se c'è un nuovo messaggio lo passo alla callback
-            self.callback(in_data.decode())
+            self.callback(pickle.loads(in_data))

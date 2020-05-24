@@ -3,6 +3,8 @@ import threading
 
 from messaging.threads.IncomingMessagesThread import IncomingMessagesThread
 from messaging.threads.PublishMessagesThread import PublishingMessagesThread
+from messaging.messages.Message import Message
+
 
 LOCALHOST = "127.0.0.1"
 PORT = 2020
@@ -23,11 +25,11 @@ class MessagingServer:
     def subscribe(self, function):
         self.subscriber = function
 
-    def handle_client_message(self, message):
+    def handle_client_message(self, message: Message):
         if self.subscriber is not None:
             self.subscriber(message)
 
-    def publish_to_all(self, message):
+    def publish_to_all(self, message: Message):
         for client in self.connected_clients:
             client.publish_message(message)
 
@@ -76,11 +78,11 @@ class ClientHandler:
         self.listeners.append(function)
 
     # publico un messaggio al client
-    def publish_message(self, message):
+    def publish_message(self, message: Message):
         self.message_publisher.add_to_queue(message)
 
     # gestisco l'arrivo di un nuovo messaggio
-    def handle_message(self, message):
+    def handle_message(self, message: Message):
         # chiamo tutti i listener passando il nuovo messaggio raw
         for listener in self.listeners:
             listener(message)

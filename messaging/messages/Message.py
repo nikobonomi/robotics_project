@@ -1,17 +1,9 @@
-from typing import Dict
-import pickle
-
-
 class Message(object):
     def __init__(self):
-        self.values: Dict = {}
-        self.serialized: bytes = b''
+        self._message_type = None
 
-    def serialize(self):
-        self.serialized = pickle.dumps(self.values)
-
-    def deserialize(self):
-        self.values = pickle.loads(self.serialized)
+    def _is(self, cls):
+        return self._message_type == cls
 
     def to_string(self):
         raise NotImplementedError
