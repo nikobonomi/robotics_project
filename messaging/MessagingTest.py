@@ -10,7 +10,7 @@ from messaging.messages.Pose import Pose
 def send_message():
     msg = Pose()
     msg.x = 10
-    msg.y = randrange(5,15)
+    msg.y = randrange(5, 15)
     server.publish_to_all(msg)
 
 

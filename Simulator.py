@@ -20,7 +20,7 @@ class Simulator:
         # self.robot.vel_left = 10
         # self.robot.vel_right = 11
         self.robot = TurtleRobot()
-        self.robot.vel_linear = 1
+        self.robot.vel_linear = 10
         self.robot.vel_angular = 0
 
         self.gui = SreGui()

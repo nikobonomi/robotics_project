@@ -21,13 +21,12 @@ class PublishingMessagesThread(threading.Thread):
                 # creo la lista di bytes
                 message_bytes = pickle.dumps(self.messagesQueue.pop(0))
 
-                full_message = bytes(f"{len(message_bytes):<{HEADERSIZE}}", 'utf-8') + message_bytes
+                #message_bytes = bytes(f"{len(message_bytes):<{HEADERSIZE}}", 'utf-8') + message_bytes
 
                 # aggiungo davanti 2 bytes che identificano la lunghezza
-                #message_bytes = len(message_bytes).to_bytes(2, byteorder='big') + message_bytes
+                message_bytes = len(message_bytes).to_bytes(2, byteorder='big') + message_bytes
                 # mando il messaggio
                 try:
-                    self.socket.send(full_message)
-                    break
+                    self.socket.send(message_bytes)
                 except BrokenPipeError:
                     print("Socket Error")
