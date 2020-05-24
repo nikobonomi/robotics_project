@@ -11,22 +11,22 @@ class Controller:
         self.rate = RateKeeper(1) # il rate è in hz
 
     def handle_server_message(self, message):
-        print(message)
+        print(str(message))
 
     def step(self):
-        # quando il contatore arriva a 10 cambia la vel di una ruota
-        if self.counter % 5 == 0:
-            vel = Velocity()
-            vel.linear = 10
-            vel.angular = 0
-            self.messaging.publish_message(vel)
-            print("mando messaggio al server")
-        elif self.counter % 9 == 0:
-            vel = Velocity()
-            vel.linear = 10
-            vel.angular = -1
-            self.messaging.publish_message(vel)
-            print("mando messaggio al server")
+        # # quando il contatore arriva a 10 cambia la vel di una ruota
+        # if self.counter % 5 == 0:
+        #     vel = Velocity()
+        #     vel.linear = 10
+        #     vel.angular = 0
+        #     self.messaging.publish_message(vel)
+        #     print("mando messaggio al server")
+        # elif self.counter % 9 == 0:
+        #     vel = Velocity()
+        #     vel.linear = 10
+        #     vel.angular = -1
+        #     self.messaging.publish_message(vel)
+        #     print("mando messaggio al server")
         self.counter = self.counter + 1
         self.rate.wait_cycle()
 

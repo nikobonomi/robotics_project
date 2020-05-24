@@ -2,6 +2,7 @@
 from Graphics import SreGui
 from messaging.MessagingServer import MessagingServer
 from messaging.messages.TwoDPose import TwoDPose
+from messaging.messages.Velocity import Velocity
 from robot.TurtleRobot import TurtleRobot
 from utils.RateKeeper import RateKeeper
 
@@ -19,8 +20,8 @@ class Simulator:
         # self.robot.vel_left = 10
         # self.robot.vel_right = 11
         self.robot = TurtleRobot()
-        self.robot.vel_linear = 20
-        self.robot.vel_angular = 1
+        self.robot.vel_linear = 1
+        self.robot.vel_angular = 0
 
         self.gui = SreGui()
         self.gui.new_robot(self.robot)
@@ -31,16 +32,11 @@ class Simulator:
 
     def handle_client_message(self, message):
         print(message)
-        # # martellata paura, ma almeno provo a cambiare i parametri del robot
-        # # so che il tipo di messaggio è uno solo, quindi splitto per estrarre i valori
-        # # ho messo la velocità sinistra in X e quella destra in Y
-        # # esempio: MSG_VEL X=0.3 Y=0.4 T=0
-        # data = message.split(" ")
-        # vel_left = data[1].split("=")[1]
-        # vel_right = data[2].split("=")[1]
-        # self.robot.vel_left = float(vel_left)
-        # self.robot.vel_right = float(vel_right)
-        # print("new vels: " + str(vel_left) + " " + str(vel_right))
+        # per il momento c'è solo 1 robot... il tartaruga
+        # quindi mi assicuro di ricevere un messaggio che sia adatto a quel robot
+        if message.is_type(Velocity):
+            self.robot.vel_linear = message.x
+            self.robot.vel_angular = message.theta
 
     def publish_pose(self):
         pose = TwoDPose()
