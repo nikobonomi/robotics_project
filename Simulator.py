@@ -20,9 +20,11 @@ class Simulator:
         # self.robot.vel_left = 10
         # self.robot.vel_right = 11
         self.robot = TurtleRobot()
-
+        self.robot.enable_laser_sensor()
         self.gui = SreGui()
         self.gui.new_robot(self.robot)
+        for sensor in self.robot.sensors_vertex:
+            self.gui.new_sensor(self.robot, sensor)
 
         # inizializzo il clock manager
         # self._clock = ClockManager(1, self._step)
