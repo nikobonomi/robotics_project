@@ -18,7 +18,7 @@ class Controller:
         self.rate = RateKeeper(freq)  # il rate è in hz
         self.pose = TwoDPose()
         self.goal = TwoDPose()
-        self.goal.x = 200
+        self.goal.x = -200
         self.goal.y = 100
 
         self.x_pid = PID(freq, 1)
