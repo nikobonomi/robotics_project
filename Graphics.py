@@ -82,7 +82,6 @@ class SreGui:
 
             self.move_widget(robot_widget, points, cartesian_pose)
 
-
             # aggiorno la posizione dei sensori
             for sensor in robot.sensors:
                 widget = self._sensors[sensor]
@@ -100,19 +99,29 @@ class SreGui:
             self.update_canvas()
 
             # aggiorno la posizione dei sensori
-            for sensor in robot.sensors:
+            # for sensor in robot.sensors:
+            #
+            #     points = sensor.pose_vertexes
+            #
+            #     # ora verifico con cosa overlappa
+            #     overlapping_widgets: List[Tile] = self._canvas.find_overlapping(points[0], points[1], points[2], points[3])
+            #
+            #     # estraggo tutti i tile overlappati
+            #     overlapping_tiles = [self._tiles[k] for k in overlapping_widgets if k in self._tiles]
+            #
+            #     # faccio lo step sul sensore
+            #     sensor.step(overlapping_tiles)
 
-                points = sensor.pose_vertexes
+    def sensor_callback(self, sensor: Sensor):
+        points = sensor.pose_vertexes
 
-                # ora verifico con cosa overlappa
-                overlapping_widgets: List[Tile] = self._canvas.find_overlapping(points[0], points[1], points[2], points[3])
+        # ora verifico con cosa overlappa
+        overlapping_widgets: List[Tile] = self._canvas.find_overlapping(points[0], points[1], points[2], points[3])
 
-                # estraggo tutti i tile overlappati
-                overlapping_tiles = [self._tiles[k] for k in overlapping_widgets if k in self._tiles]
+        # estraggo tutti i tile overlappati
+        overlapping_tiles = [self._tiles[k] for k in overlapping_widgets if k in self._tiles]
 
-                # faccio lo step sul sensore
-                sensor.step(overlapping_tiles)
-
+        return overlapping_tiles
 
     def main_loop(self):
         self._root.mainloop()

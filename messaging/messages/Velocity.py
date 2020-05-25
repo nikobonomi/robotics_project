@@ -10,4 +10,4 @@ class Velocity(Message):
         self.z = 0
 
     def __str__(self):
-        return "MSG_VEL X=" + str(self.x) + " Y=" + str(self.y) + " T=" + str(self.z)
+        return "MSG_VEL X=" + str(self.x) + " Y=" + str(self.y) + " Z=" + str(self.z)

@@ -15,7 +15,7 @@ class TwoDCartesianPose(object):
         self.y = np.around(pose[1, 2], decimals=2)
         self.theta = np.around(-math.atan2(pose[0, 0], pose[1, 0]) + np.pi / 2, decimals=5)
         # solo per test! poi da togliere!!
-        self.theta += np.pi/4
+        # self.theta += np.pi/4
 
 
 class TwoDRobot(object):
@@ -32,7 +32,7 @@ class TwoDRobot(object):
     def get_robot_draw_points(self) -> []:
         return self._vertex
 
-    def simulate_dt(self, dt: int):
+    def simulate_dt(self, dt: float):
         raise NotImplementedError()
 
     def get_cartesian_pose(self) -> TwoDCartesianPose:

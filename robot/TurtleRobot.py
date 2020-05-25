@@ -34,7 +34,7 @@ class TurtleRobot(TwoDRobot):
         self.vel_linear = 0  # per andare avanti o indietro
         self.vel_angular = 0  # per girarsi a destra o sinistra
 
-    def simulate_dt(self, dt):
+    def simulate_dt(self, dt: float):
         # if we are moving straight, R is at the infinity and we handle this case separately
         if self.vel_angular == 0:
             transformation_matrix = self.mk_tr(self.vel_linear * dt, 0)
@@ -49,6 +49,9 @@ class TurtleRobot(TwoDRobot):
             transformation_matrix = self.mk_tr(self.vel_linear * dt, 0) @ self.mk_rot(self.vel_angular * dt)
 
         self.pose = self.pose @ transformation_matrix
+
+        for s in self.sensors:
+            s.step()
 
     @staticmethod
     def mk_tr(x, y):
