@@ -1,6 +1,9 @@
 import math
 import tkinter as tk
-import robot.TwoDRobot as Robot
+
+from environment.Obstacle import Obstacle
+from environment.Tile import Tile
+from robot.TwoDRobot import TwoDCartesianPose, TwoDRobot
 from typing import Dict, List
 
 from sensor.Sensor import Sensor
@@ -17,12 +20,13 @@ class SreGui:
 
         self.draw_axis()
 
-        self._robots: Dict[Robot] = {}
+        self._robots: Dict[TwoDRobot] = {}
         self._sensors: Dict[Sensor] = {}
+        self._tiles: Dict[Tile] = {}
         # self._robot = self._canvas.create_polygon(w / 2, h / 2, w / 2 + 20, h / 2, w / 2 + 10, h / 2 - 20)
         self.update_canvas()
 
-    def new_robot(self, robot: Robot):
+    def new_robot(self, robot: TwoDRobot):
         self._robots[robot] = self._canvas.create_polygon(robot.get_robot_draw_points())
         for sensor in robot.sensors:
             self.new_sensor(sensor)
@@ -30,6 +34,10 @@ class SreGui:
 
     def new_sensor(self, sensor: Sensor):
         self._sensors[sensor] = self._canvas.create_polygon(sensor.vertexes, fill="red")
+        self.update_canvas()
+
+    def new_tile(self, tile: Tile):
+        self._tiles[tile] = self._canvas.create_polygon(tile.vertexes, fill=tile.filling, outline=tile.outline, width=tile.width)
         self.update_canvas()
 
     def draw_axis(self):
@@ -58,36 +66,29 @@ class SreGui:
             new_points.append(y_new)
         return new_points
 
-    def step_gui(self):
+    def move_widget(self, widget, points: List[int], cart_pose: TwoDCartesianPose):
+        # porto il robot all'origine con i punti ruotati
+        self._canvas.coords(widget, points)
+        # lo muovo al posto giusto
+        self._canvas.move(widget, cart_pose.x, cart_pose.y)
 
+    def step_gui(self):
         for robot in self._robots.keys():
             cartesian_pose = robot.get_cartesian_pose()
             # calcolo la rotazione del robot all'origine
             points = self.rotate(robot.get_robot_draw_points(), cartesian_pose.theta)
-            # points = robot.get_robot_draw_points()
-            # porto il robot all'origine con i punti ruotati
-            self._canvas.coords(self._robots[robot], points)
-            # lo muovo al posto giusto
-            self._canvas.move(self._robots[robot], cartesian_pose.x, cartesian_pose.y)
+            robot_widget = self._robots[robot]
+
+            self.move_widget(robot_widget, points, cartesian_pose)
 
             # aggiorno la posizione dei sensori
             for sensor in robot.sensors:
-                widget: List[int] = self._sensors[sensor]
+                widget = self._sensors[sensor]
 
+                # calcolo la rotazione del sensore all'origine rispetto al centro del robot
                 points = self.rotate(sensor.vertexes, cartesian_pose.theta)
-                self._canvas.coords(widget, points)
-                self._canvas.move(widget, cartesian_pose.x, cartesian_pose.y)
 
-            # # cerco un sensore
-            # # vertex, widget = self._sensors[robot]
-            # # if vertex is not None:
-            #     # calcolo la rotazione del robot all'origine
-            #     points = self.rotate(vertexes, cartesian_pose.theta)
-            #     # points = robot.get_robot_draw_points()
-            #     # porto il robot all'origine con i punti ruotati
-            #     self._canvas.coords(widget, points)
-            #     # lo muovo al posto giusto
-            #     self._canvas.move(widget, cartesian_pose.x, cartesian_pose.y)
+                self.move_widget(widget, points, cartesian_pose)
 
         self.update_canvas()
 

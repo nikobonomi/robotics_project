@@ -6,5 +6,6 @@ class Sensor(object):
         self._get_value: Callable = callback
         self.vertexes: List[int] = vertexes
 
+
     def step(self):
         raise NotImplementedError

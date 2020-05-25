@@ -1,5 +1,7 @@
 from Graphics import SreGui
+from environment.Hole import Hole
 from environment.Obstacle import Obstacle
+from environment.SquareWall import SquareWall
 from messaging.MessagingServer import MessagingServer
 from messaging.messages.TwoDPose import TwoDPose
 from messaging.messages.Velocity import Velocity
@@ -28,8 +30,12 @@ class Simulator:
         self.robot.sensors.append(temp_sensor)
         temp_sensor = ProximitySensor(Obstacle, self.temp, [-15, -9, -25, -9, -25, -7, -15, -7])
         self.robot.sensors.append(temp_sensor)
+        temp_obstacle = SquareWall("ciao", 100, 100, 20, 20)
+        temp_hole = Hole("ciao", -200, -200, 30, 30)
         self.gui = SreGui()
         self.gui.new_robot(self.robot)
+        self.gui.new_tile(temp_obstacle)
+        self.gui.new_tile(temp_hole)
 
         # inizializzo il clock manager
         # self._clock = ClockManager(1, self._step)
