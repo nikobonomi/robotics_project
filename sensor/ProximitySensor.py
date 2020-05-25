@@ -2,7 +2,7 @@ from sensor.Sensor import Sensor
 from environment.Tile import Tile
 from typing import Callable, List, Type
 
-from utils.SpacialCalculations import line_intersection, euclidean_distance
+from utils.SpacialCalculations import line_intersection, distance
 
 
 class ProximitySensor(Sensor):
@@ -21,7 +21,6 @@ class ProximitySensor(Sensor):
             if isinstance(tile, self._target):
                 # get tile distance from sensor
                 self.range = self._target_distance(tile)
-                break
 
     def _target_distance(self, target: Tile) -> float:
         # cerco su tutti i lati del poligono del tile se c'è un'intersezione
@@ -44,8 +43,8 @@ class ProximitySensor(Sensor):
             # se intersection è none vuol dire che non ci sono, ma se è true allora c'è qualcosa
             if intersection is not None:
                 x, y = intersection
-                distance = euclidean_distance((line_start, intersection))
-                print("intersezione a distanza " + str(distance) + " al punto " + str(x) + "," + str(y) )
+                dist = distance((line_start, intersection))
+                print("intersezione a distanza " + str(dist) + " al punto " + str(x) + "," + str(y) )
 
 
 

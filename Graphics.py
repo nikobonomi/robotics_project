@@ -95,7 +95,14 @@ class SreGui:
                 # ottengo le coordinate dei punti trasformati nel canvas
                 points = self._canvas.coords(widget)
 
-                sensor.pose_vertexes=points
+                sensor.pose_vertexes = points
+
+            self.update_canvas()
+
+            # aggiorno la posizione dei sensori
+            for sensor in robot.sensors:
+
+                points = sensor.pose_vertexes
 
                 # ora verifico con cosa overlappa
                 overlapping_widgets: List[Tile] = self._canvas.find_overlapping(points[0], points[1], points[2], points[3])
@@ -106,8 +113,6 @@ class SreGui:
                 # faccio lo step sul sensore
                 sensor.step(overlapping_tiles)
 
-
-        self.update_canvas()
 
     def main_loop(self):
         self._root.mainloop()

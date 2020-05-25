@@ -1,3 +1,5 @@
+import time
+
 from Graphics import SreGui
 from environment.Hole import Hole
 from environment.Obstacle import Obstacle
@@ -31,7 +33,7 @@ class Simulator:
         temp_sensor = ProximitySensor(Obstacle, self.temp, [-15, -8, -25, -8])
         self.robot.sensors.append(temp_sensor)
         temp_obstacle = SquareWall("obstacle 1", 100, 0, 20, 20)
-        temp_obstacle2 = SquareWall("obstacle 2", 100, 100, 20, 20)
+        temp_obstacle2 = SquareWall("obstacle 2", 100, 110, 20, 20)
         temp_obstacle3 = SquareWall("obstacle 3", -100, 100, 20, 20)
         temp_hole = Hole("ciao", -200, -200, 30, 30)
         self.gui = SreGui()
@@ -74,3 +76,4 @@ class Simulator:
         self.robot.simulate_dt(1)
         print("step")
         self.gui.step_gui()
+

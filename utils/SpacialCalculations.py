@@ -1,6 +1,8 @@
 # se la linea può intersecare un'altra
 from math import sqrt
 
+import numpy as np
+
 
 def can_intersect(line, target_line):
     return True
@@ -20,10 +22,16 @@ def line_intersection(line1, line2):
     d = (det(*line1), det(*line2))
     x = det(d, x_diff) / div
     y = det(d, y_diff) / div
-    return x, y
+
+    # verifico se il punto è davvero sui due segmenti. calcolo abbastanza semplice
+
+    if np.abs((distance([line1[0], [x, y]]) + distance([[x, y], line1[1]])) - distance(line1))< 0.01 and \
+            np.abs((distance([line2[0], [x, y]]) + distance([[x, y], line2[1]])) - distance(line2))< 0.01:
+        return x, y
+
+    return None
 
 
-def euclidean_distance(point):
-    return sqrt(pow((point[1][0] - point[0][0]), 2) +
-                pow((point[1][1] - point[0][1]), 2))
-
+def distance(points):
+    return sqrt(pow((points[1][0] - points[0][0]), 2) +
+                pow((points[1][1] - points[0][1]), 2))
