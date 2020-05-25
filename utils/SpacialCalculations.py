@@ -25,7 +25,7 @@ def line_intersection(line1, line2):
 
     # verifico se il punto è davvero sui due segmenti. calcolo abbastanza semplice
 
-    if np.abs((distance([line2[0], [x, y]]) + distance([[x, y], line2[1]])) - distance(line2)) < 0.01:
+    if np.isclose((distance([line2[0], [x, y]]) + distance([[x, y], line2[1]])), distance(line2)):
         return x, y
 
     return None
