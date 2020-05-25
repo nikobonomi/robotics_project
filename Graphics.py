@@ -33,7 +33,7 @@ class SreGui:
         self.update_canvas()
 
     def new_sensor(self, sensor: Sensor):
-        self._sensors[sensor] = self._canvas.create_polygon(sensor.vertexes, fill="red")
+        self._sensors[sensor] = self._canvas.create_line(sensor.vertexes, fill="red", width=1)
         self.update_canvas()
 
     def new_tile(self, tile: Tile):
@@ -42,8 +42,8 @@ class SreGui:
 
     def draw_axis(self):
         # disegno gli assi
-        self._canvas.create_line(0, 0, 100, 0, width=1, fill='red', dash=(4, 2))
-        self._canvas.create_line(0, 0, 0, 100, width=1, fill='green', dash=(4, 2))
+        self._canvas.create_line([0, 0, 100, 0], width=1, fill='red', dash=(4, 2))
+        self._canvas.create_line([0, 0, 0, 100], width=1, fill='green', dash=(4, 2))
 
     def update_canvas(self):
         self._canvas.pack()

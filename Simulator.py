@@ -24,11 +24,11 @@ class Simulator:
         # self.robot.vel_left = 10
         # self.robot.vel_right = 11
         self.robot = TurtleRobot()
-        temp_sensor = ProximitySensor(Obstacle, self.temp, [10, -1, 30, -1, 30, 1, 10, 1])
+        temp_sensor = ProximitySensor(Obstacle, self.temp, [10, 0, 30, 0])
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.temp, [-15, 8, -25, 8, -25, 6, -15, 6])
+        temp_sensor = ProximitySensor(Obstacle, self.temp, [-15, 8, -25, 8])
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.temp, [-15, -9, -25, -9, -25, -7, -15, -7])
+        temp_sensor = ProximitySensor(Obstacle, self.temp, [-15, -8, -25, -8])
         self.robot.sensors.append(temp_sensor)
         temp_obstacle = SquareWall("ciao", 100, 100, 20, 20)
         temp_hole = Hole("ciao", -200, -200, 30, 30)
