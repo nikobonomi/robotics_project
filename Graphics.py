@@ -37,7 +37,8 @@ class SreGui:
         self.update_canvas()
 
     def new_tile(self, tile: Tile):
-        self._tiles[tile] = self._canvas.create_polygon(tile.vertexes, fill=tile.filling, outline=tile.outline, width=tile.width)
+        self._tiles[self._canvas.create_polygon(tile.vertexes, fill=tile.filling, outline=tile.outline,
+                                                width=tile.width)] = tile
         self.update_canvas()
 
     def draw_axis(self):
@@ -81,6 +82,7 @@ class SreGui:
 
             self.move_widget(robot_widget, points, cartesian_pose)
 
+
             # aggiorno la posizione dei sensori
             for sensor in robot.sensors:
                 widget = self._sensors[sensor]
@@ -89,6 +91,21 @@ class SreGui:
                 points = self.rotate(sensor.vertexes, cartesian_pose.theta)
 
                 self.move_widget(widget, points, cartesian_pose)
+
+                # ottengo le coordinate dei punti trasformati nel canvas
+                points = self._canvas.coords(widget)
+
+                sensor.pose_vertexes=points
+
+                # ora verifico con cosa overlappa
+                overlapping_widgets: List[Tile] = self._canvas.find_overlapping(points[0], points[1], points[2], points[3])
+
+                # estraggo tutti i tile overlappati
+                overlapping_tiles = [self._tiles[k] for k in overlapping_widgets if k in self._tiles]
+
+                # faccio lo step sul sensore
+                sensor.step(overlapping_tiles)
+
 
         self.update_canvas()
 

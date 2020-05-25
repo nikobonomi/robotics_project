@@ -24,17 +24,21 @@ class Simulator:
         # self.robot.vel_left = 10
         # self.robot.vel_right = 11
         self.robot = TurtleRobot()
-        temp_sensor = ProximitySensor(Obstacle, self.temp, [10, 0, 30, 0])
+        temp_sensor = ProximitySensor(Obstacle, self.temp, [10, 0, 300, 0])
         self.robot.sensors.append(temp_sensor)
         temp_sensor = ProximitySensor(Obstacle, self.temp, [-15, 8, -25, 8])
         self.robot.sensors.append(temp_sensor)
         temp_sensor = ProximitySensor(Obstacle, self.temp, [-15, -8, -25, -8])
         self.robot.sensors.append(temp_sensor)
-        temp_obstacle = SquareWall("ciao", 100, 100, 20, 20)
+        temp_obstacle = SquareWall("obstacle 1", 100, 0, 20, 20)
+        temp_obstacle2 = SquareWall("obstacle 2", 100, 100, 20, 20)
+        temp_obstacle3 = SquareWall("obstacle 3", -100, 100, 20, 20)
         temp_hole = Hole("ciao", -200, -200, 30, 30)
         self.gui = SreGui()
         self.gui.new_robot(self.robot)
         self.gui.new_tile(temp_obstacle)
+        self.gui.new_tile(temp_obstacle2)
+        self.gui.new_tile(temp_obstacle3)
         self.gui.new_tile(temp_hole)
 
         # inizializzo il clock manager
