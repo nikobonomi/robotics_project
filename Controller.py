@@ -22,7 +22,7 @@ class Controller:
         self.goal.y = 100
 
         self.x_pid = PID(freq, 1)
-        self.theta_pid = PID(freq, 3, 0, 0.1)
+        self.z_pid = PID(freq, 3, 0, 0.1)
         self.target_x = 100
         self.done = False
 
@@ -49,10 +49,10 @@ class Controller:
 
         # Angular velocity in the z-axis.
 
-        z_vel = self.theta_pid.compute(angle_error)
+        z_vel = self.z_pid.compute(angle_error)
         z_vel = np.clip(z_vel, -0.4, 0.4)  # It's always a tourtle....
 
-        message.theta = z_vel
+        message.z = z_vel
 
         # Publishing our vel_msg
         self.messaging.publish_message(message)

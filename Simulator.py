@@ -56,7 +56,7 @@ class Simulator:
         # quindi mi assicuro di ricevere un messaggio che sia adatto a quel robot
         if message.is_type(Velocity):
             self.robot.vel_linear = message.x
-            self.robot.vel_angular = message.theta
+            self.robot.vel_angular = message.z
 
     def publish_pose(self):
         pose = TwoDPose()
