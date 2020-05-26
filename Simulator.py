@@ -30,11 +30,11 @@ class Simulator:
         # self.robot.vel_left = 10
         # self.robot.vel_right = 11
         self.robot = TurtleRobot()
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [10, 0, 30, 0], TwoDPoint(10, 0), "f1")
+        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [10, 0, 30, 0], TwoDPoint(10, 0), "f_c")
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [5, -10, 28, -14], TwoDPoint(10, -10), "f2")
+        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [5, -10, 28, -14], TwoDPoint(10, -10), "f_r")
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [5, 10, 28, 14], TwoDPoint(10, 10), "f3")
+        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [5, 10, 28, 14], TwoDPoint(10, 10), "f_l")
         self.robot.sensors.append(temp_sensor)
         temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [-15, 8, -25, 8], TwoDPoint(-15, 8), "b1")
         self.robot.sensors.append(temp_sensor)
