@@ -15,7 +15,7 @@ class ProximitySensor(Sensor):
 
     def step(self):
         self._value: List[Tile] = self._get_candidates(self)
-        self.sensor_result = -1
+        self.sensor_result = 15
         if len(self._value) > 0:
             self.sensor_result = 9999
         for tile in self._value:

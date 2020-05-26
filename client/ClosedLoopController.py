@@ -13,13 +13,12 @@ class ClosedLoopController:
 
     def __init__(self, freq):
         self.x_pid = PID(freq, 1., 0, 1.)
-        self.z_pid = PID(freq, 3., 0, 1.)
+        self.z_pid = PID(freq, 2.5, 0, 1.5)
 
         self.messaging = MessagingClient()
         self.messaging.add_listener(self.handle_server_message)
 
         self.pose = TwoDPoseMsg()
-        self.theta = 0
         self.velocity = 0
 
         self.proximity = {
@@ -45,10 +44,10 @@ class ClosedLoopController:
         # Publishing our vel_msg
         self.messaging.publish_message(message)
 
-    def is_near_wall(self, proximity=8):
+    def is_near_wall(self, proximity=12):
         # se uno qualunque dei sensori e` inferiore a proximity allora ritorna true, se no false
         for key, value in self.proximity.items():
-            if (key == "f_l" or key != 'f_r') and proximity > value > 0:
+            if (key == "f_l" or key == 'f_r') and proximity > value > 0:
                 return True
         return False
 
@@ -58,14 +57,14 @@ class ClosedLoopController:
             print("Wall crash prevention system active")
             return
         else:
-            x_vel = self.x_pid.compute(10)
+            x_vel = self.x_pid.compute(50)
 
             self.set_speed(x_vel)
 
     def step_to_point(self, goal):
         distance_error = ErrorComputing.euclidean_distance(self.pose, goal)
         target_angle = ErrorComputing.steering_angle(self.pose, goal)
-        angle_error = ErrorComputing.angle_difference(target_angle, self.theta)
+        angle_error = ErrorComputing.angle_difference(target_angle, self.pose.theta)
         # Linear velocity in the x-axis.
         x_vel = self.x_pid.compute(distance_error)
 
@@ -75,18 +74,18 @@ class ClosedLoopController:
         self.set_speed(x_vel, z_vel)
 
     def step_to_angle(self, target_angle):
-        error = ErrorComputing.angle_difference(target_angle, self.theta)
+        error = ErrorComputing.angle_difference(target_angle, self.pose.theta)
 
         z_vel = self.z_pid.compute(error)
 
         self.set_speed(0, z_vel)
 
-    def is_at_position(self, position, tolerance=10):
+    def is_at_position(self, position, tolerance=12):
         distance_error = ErrorComputing.euclidean_distance(self.pose, position)
         return distance_error < tolerance
 
     def is_at_angle(self, target, tolerance=.5):
-        error = ErrorComputing.angle_difference(target, self.theta)
+        error = ErrorComputing.angle_difference(target, self.pose.theta)
         # rospy.loginfo("Current theta %.5f, back theta: %.5f, error: %.5f" % (self.theta, target, error))
         return abs(error) < tolerance
 
@@ -94,13 +93,23 @@ class ClosedLoopController:
         if self.is_facing_wall():
             return
 
-        error = self.proximity["c-right"] - self.proximity["c-left"]
+        error = self.proximity["f_r"] - self.proximity["f_l"]
 
         z_vel = self.z_pid.compute(error)
         self.set_speed(0, z_vel)
 
-    def is_facing_wall(self, tol=.001):
-        err_center = abs(self.proximity["c-right"] - self.proximity["c-left"])
+    def is_facing_wall(self, tol=.1):
+        err_center = abs(self.proximity["f_r"] - self.proximity["f_l"])
+        print(str(err_center))
+        if err_center == 0.:
+            return False
+
+        return err_center < tol
+
+    def is_sensor_back_wall(self, tol=.1):
+
+        err_center = abs(self.proximity["b_r"] - self.proximity["b_l"])
+        print(str(err_center))
         if err_center == 0.:
             return False
 
@@ -110,40 +119,31 @@ class ClosedLoopController:
         if self.is_sensor_back_wall():
             return
 
-        error = self.proximity["b-left"] - self.proximity["b-right"]
+        error = self.proximity["b_r"] - self.proximity["b_l"]
         # Mean of the errors
 
         z_vel = self.z_pid.compute(error * 3)
         self.set_speed(0, z_vel)
 
-    def is_sensor_back_wall(self, tol=.0001):
-
-        err_center = abs(self.proximity["b-right"] - self.proximity["b-left"])
-
-        if err_center == 0.:
-            return False
-
-        return err_center < tol
-
     def get_back_theta_random(self):
-        if self.theta > 0:
-            final_theta = self.theta - np.pi
+        if self.pose.theta > 0:
+            final_theta = self.pose.theta - np.pi
         else:
-            final_theta = self.theta + np.pi
+            final_theta = self.pose.theta + np.pi
 
         final_theta = final_theta + random.uniform(-np.pi / 2, np.pi / 2)
 
-        print("Current theta %.5f, back theta: %.5f" % (self.theta, final_theta))
+        print("Current theta %.5f, back theta: %.5f" % (self.pose.theta, final_theta))
 
         return final_theta
 
     def get_back_theta(self):
-        if self.theta > 0:
-            final_theta = self.theta - np.pi
+        if self.pose.theta > 0:
+            final_theta = self.pose.theta - np.pi
         else:
-            final_theta = self.theta + np.pi
+            final_theta = self.pose.theta + np.pi
 
-        print("Current theta %.5f, back theta: %.5f" % (self.theta, final_theta))
+        print("Current theta %.5f, back theta: %.5f" % (self.pose.theta, final_theta))
 
         return final_theta
 
