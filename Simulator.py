@@ -5,14 +5,14 @@ from environment.Hole import Hole
 from environment.Obstacle import Obstacle
 from environment.SquareWall import SquareWall
 from messaging.MessagingServer import MessagingServer
-from messaging.messages.TwoDPose import TwoDPose
+from messaging.messages.ProximitySensorMessage import ProximitySensorMessage
 from messaging.messages.Velocity import Velocity
 from robot.TurtleRobot import TurtleRobot
 from sensor.ProximitySensor import ProximitySensor
 from utils.RateKeeper import RateKeeper
 from utils.SupportClasses import TwoDPoint
 
-RATE = 5  # hz
+RATE = 20  # hz
 
 
 class Simulator:
@@ -29,15 +29,15 @@ class Simulator:
         # self.robot.vel_left = 10
         # self.robot.vel_right = 11
         self.robot = TurtleRobot()
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [10, 0, 300, 0], TwoDPoint(10, 0))
+        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [10, 0, 30, 0], TwoDPoint(10, 0), "f1")
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [5, -10, 300, -10], TwoDPoint(10, -10))
+        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [5, -10, 30, -10], TwoDPoint(10, -10), "f2")
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [5, 10, 300, 10], TwoDPoint(10, 10))
+        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [5, 10, 30, 10], TwoDPoint(10, 10), "f3")
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [-15, 8, -25, 8], TwoDPoint(-15, 8))
+        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [-15, 8, -25, 8], TwoDPoint(-15, 8), "b1")
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [-15, -8, -25, -8], TwoDPoint(-15, -8))
+        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [-15, -8, -25, -8], TwoDPoint(-15, -8), "b2")
         self.robot.sensors.append(temp_sensor)
         temp_obstacle = SquareWall("obstacle 1", 100, 0, 20, 20)
         temp_obstacle2 = SquareWall("obstacle 2", 100, 110, 20, 20)
@@ -61,18 +61,18 @@ class Simulator:
             self.robot.vel_linear = message.x
             self.robot.vel_angular = message.z
 
-    def publish_pose(self):
-        pose = TwoDPose()
-        pose.x = self.robot.get_cartesian_pose().x
-        pose.y = self.robot.get_cartesian_pose().y
-        pose.theta = self.robot.get_cartesian_pose().theta
-        self.messaging.publish_to_all(pose)
+    def publish_messages(self):
+        for message in self.robot.get_status_messages():
+            self.messaging.publish_to_all(message)
 
     def run(self):
         while True:
             self.robot.simulate_dt(1 / RATE)
             self.gui.step_gui()
-            self.publish_pose()
+            # deve essere fatto dopo l'update della gui
+            # perchè usa il motore grafico per calcolare i valori dei sensori
+            self.robot.simulate_sensors()
+            self.publish_messages()
             self.rate.wait_cycle()
 
     def _step(self):

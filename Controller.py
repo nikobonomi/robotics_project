@@ -3,6 +3,7 @@ import time
 import numpy as np
 
 from messaging.MessagingClient import MessagingClient
+from messaging.messages.ProximitySensorMessage import ProximitySensorMessage
 from messaging.messages.TwoDPose import TwoDPose
 from messaging.messages.Velocity import Velocity
 from utils.ErrorComputing import ErrorComputing
@@ -18,8 +19,8 @@ class Controller:
         self.rate = RateKeeper(freq)  # il rate è in hz
         self.pose = TwoDPose()
         self.goal = TwoDPose()
-        self.goal.x = -200
-        self.goal.y = 100
+        self.goal.x = 200
+        self.goal.y = 20
 
         self.x_pid = PID(freq, 1)
         self.z_pid = PID(freq, 3, 0, 0.1)
@@ -30,6 +31,9 @@ class Controller:
         # mi assicuro che sia il messaggio giusto
         if message.is_type(TwoDPose):
             self.pose = message
+        if message.is_type(ProximitySensorMessage):
+            if message.sensor_value > 0:
+                print(message)
 
     def is_at_goal(self, goal, tolerance=10):
         distance_error = ErrorComputing.euclidean_distance(self.pose, goal)

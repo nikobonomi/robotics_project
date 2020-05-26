@@ -1,7 +1,12 @@
+from typing import List
+
 import matplotlib.pyplot as plt
 import numpy as np
 
 # questo non va bene, da rivedere
+from messaging.messages.Message import Message
+from messaging.messages.ProximitySensorMessage import ProximitySensorMessage
+from messaging.messages.TwoDPose import TwoDPose
 from robot.TwoDRobot import TwoDRobot
 
 
@@ -50,6 +55,7 @@ class TurtleRobot(TwoDRobot):
 
         self.pose = self.pose @ transformation_matrix
 
+    def simulate_sensors(self):
         for s in self.sensors:
             s.step()
 
@@ -64,6 +70,27 @@ class TurtleRobot(TwoDRobot):
         return np.array([[np.cos(theta), -np.sin(theta), 0],
                          [np.sin(theta), np.cos(theta), 0],
                          [0, 0, 1]])
+
+    def get_status_messages(self) -> List[Message]:
+        results: List[Message] = []
+
+        cartesian_pose = self.get_cartesian_pose()
+        # messaggio di posa del robot
+        pose_message = TwoDPose()
+        pose_message.x = cartesian_pose.x
+        pose_message.y = cartesian_pose.y
+        pose_message.theta = cartesian_pose.theta
+
+        results.append(pose_message)
+
+        # ora guardo per ogni sensore
+        for sensor in self.sensors:
+            sensor_message = ProximitySensorMessage()
+            sensor_message.sensor_value = sensor.sensor_result
+            sensor_message.sensor_name = sensor.name
+            results.append(sensor_message)
+
+        return results
 
     # lo mette in posizione x e y con angolazione theta
     # sfruttanto la matrice pose

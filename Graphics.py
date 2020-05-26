@@ -116,7 +116,7 @@ class SreGui:
         points = sensor.pose_vertexes
 
         # ora verifico con cosa overlappa
-        overlapping_widgets: List[Tile] = self._canvas.find_overlapping(points[0], points[1], points[2], points[3])
+        overlapping_widgets = self._canvas.find_overlapping(points[0], points[1], points[2], points[3])
 
         # estraggo tutti i tile overlappati
         overlapping_tiles = [self._tiles[k] for k in overlapping_widgets if k in self._tiles]

@@ -7,19 +7,23 @@ from utils.SupportClasses import TwoDPoint
 
 
 class ProximitySensor(Sensor):
-    def __init__(self, target: Type, callback: Callable, vertexes: List[int], position: TwoDPoint):
-        Sensor.__init__(self, callback, vertexes, position)
+    def __init__(self, target: Type, callback: Callable, vertexes: List[int], position: TwoDPoint, name):
+        Sensor.__init__(self, callback, vertexes, position, name)
         self._target: Type = target
         self._value: List[Tile] = []
         self.range: float = -1
 
     def step(self):
         self._value: List[Tile] = self._get_candidates(self)
-        self.range: float = -1
+        self.sensor_result = -1
+        if len(self._value) > 0:
+            self.sensor_result = 9999
         for tile in self._value:
             if isinstance(tile, self._target):
                 # get tile distance from sensor
-                self.range = self._target_distance(tile)
+                temp = self._target_distance(tile)
+                if temp< self.sensor_result:
+                    self.sensor_result = temp
 
     def _target_distance(self, target: Tile) -> float:
         # cerco su tutti i lati del poligono del tile se c'è un'intersezione
@@ -48,5 +52,5 @@ class ProximitySensor(Sensor):
                 if return_dist > dist:
                     return_dist = dist
                 # print("intersezione a distanza " + str(dist) + " al punto " + str(x) + "," + str(y))
-        print("intersezione a distanza " + str(return_dist))
+        #print("intersezione a distanza " + str(return_dist))
         return return_dist

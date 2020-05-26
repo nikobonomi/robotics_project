@@ -4,8 +4,9 @@ from typing import List
 import numpy as np
 import math
 
-
 # estraggo la posa dalla matrice
+from messaging.messages.Message import Message
+from messaging.messages.TwoDPose import TwoDPose
 from sensor.Sensor import Sensor
 
 
@@ -33,6 +34,9 @@ class TwoDRobot(object):
         return self._vertex
 
     def simulate_dt(self, dt: float):
+        raise NotImplementedError()
+
+    def get_status_messages(self) -> List[Message]:
         raise NotImplementedError()
 
     def get_cartesian_pose(self) -> TwoDCartesianPose:
