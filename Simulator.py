@@ -3,6 +3,7 @@ import time
 from Graphics import SreGui
 from environment.Hole import Hole
 from environment.Obstacle import Obstacle
+from environment.PolygonWall import PolygonWall
 from environment.SquareWall import SquareWall
 from messaging.MessagingServer import MessagingServer
 from messaging.messages.ProximitySensorMsg import ProximitySensorMsg
@@ -39,7 +40,7 @@ class Simulator:
         self.robot.sensors.append(temp_sensor)
         temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [-15, -8, -25, -8], TwoDPoint(-15, -8), "b2")
         self.robot.sensors.append(temp_sensor)
-        temp_obstacle = SquareWall("obstacle 1", 100, 0, 20, 20)
+        temp_obstacle = PolygonWall("obstacle 1", [50, 88, 162, -68, 311, -67, 196, 103, 216, 2])
         temp_obstacle2 = SquareWall("obstacle 2", 100, 110, 20, 20)
         temp_obstacle3 = SquareWall("obstacle 3", -100, 100, 20, 20)
         temp_hole = Hole("ciao", -200, -200, 30, 30)
@@ -78,4 +79,3 @@ class Simulator:
     def _step(self):
         self.robot.simulate_dt(1)
         self.gui.step_gui()
-
