@@ -10,19 +10,18 @@ class ProximitySensor(Sensor):
     def __init__(self, target: Type, callback: Callable, vertexes: List[int], position: TwoDPoint, name):
         Sensor.__init__(self, callback, vertexes, position, name)
         self._target: Type = target
-        self._value: List[Tile] = []
-        self.range: float = -1
+        self.sensor_result: float = -1  # rappresenta la distanza dal tile più vicino
 
     def step(self):
-        self._value: List[Tile] = self._get_candidates(self)
+        self._candidates: List[Tile] = self._get_candidates(self)
         self.sensor_result = 15
-        if len(self._value) > 0:
+        if len(self._candidates) > 0:
             self.sensor_result = 9999
-        for tile in self._value:
+        for tile in self._candidates:
             if isinstance(tile, self._target):
                 # get tile distance from sensor
                 temp = self._target_distance(tile)
-                if temp< self.sensor_result:
+                if temp < self.sensor_result:
                     self.sensor_result = temp
 
     def _target_distance(self, target: Tile) -> float:
@@ -52,5 +51,5 @@ class ProximitySensor(Sensor):
                 if return_dist > dist:
                     return_dist = dist
                 # print("intersezione a distanza " + str(dist) + " al punto " + str(x) + "," + str(y))
-        #print("intersezione a distanza " + str(return_dist))
+        # print("intersezione a distanza " + str(return_dist))
         return return_dist
