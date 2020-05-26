@@ -3,9 +3,9 @@ import time
 import numpy as np
 
 from messaging.MessagingClient import MessagingClient
-from messaging.messages.ProximitySensorMessage import ProximitySensorMessage
-from messaging.messages.TwoDPose import TwoDPose
-from messaging.messages.Velocity import Velocity
+from messaging.messages.ProximitySensorMsg import ProximitySensorMsg
+from messaging.messages.TwoDPoseMsg import TwoDPoseMsg
+from messaging.messages.VelocityMsg import VelocityMsg
 from utils.ErrorComputing import ErrorComputing
 from utils.PID import PID
 from utils.RateKeeper import RateKeeper
@@ -17,8 +17,8 @@ class Controller:
         self.messaging.add_listener(self.handle_server_message)
         self.counter = 1
         self.rate = RateKeeper(freq)  # il rate è in hz
-        self.pose = TwoDPose()
-        self.goal = TwoDPose()
+        self.pose = TwoDPoseMsg()
+        self.goal = TwoDPoseMsg()
         self.goal.x = 200
         self.goal.y = 20
 
@@ -29,9 +29,9 @@ class Controller:
 
     def handle_server_message(self, message):
         # mi assicuro che sia il messaggio giusto
-        if message.is_type(TwoDPose):
+        if message.is_type(TwoDPoseMsg):
             self.pose = message
-        if message.is_type(ProximitySensorMessage):
+        if message.is_type(ProximitySensorMsg):
             if message.sensor_value > 0:
                 print(message)
 
@@ -40,7 +40,7 @@ class Controller:
         return distance_error < tolerance
 
     def step_to_point(self, goal):
-        message = Velocity()
+        message = VelocityMsg()
 
         distance_error = ErrorComputing.euclidean_distance(self.pose, goal)
         target_angle = ErrorComputing.steering_angle(self.pose, goal)
@@ -67,7 +67,7 @@ class Controller:
             self.done = self.is_at_goal(self.goal)
         elif self.done:
             # se è a posto allora ferma tutto
-            self.messaging.publish_message(Velocity())
+            self.messaging.publish_message(VelocityMsg())
 
         self.rate.wait_cycle()
 

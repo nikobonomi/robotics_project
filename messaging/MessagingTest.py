@@ -5,11 +5,11 @@ from ClockManager import ClockManager
 from messaging.MessagingClient import MessagingClient
 from messaging.MessagingServer import MessagingServer
 from messaging.messages import Message
-from messaging.messages.TwoDPose import TwoDPose
+from messaging.messages.TwoDPoseMsg import TwoDPoseMsg
 
 
 def send_message():
-    msg = TwoDPose()
+    msg = TwoDPoseMsg()
     msg.x = 10
     msg.y = randrange(5, 15)
     server.publish_to_all(msg)

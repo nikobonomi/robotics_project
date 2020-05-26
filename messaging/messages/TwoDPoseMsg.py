@@ -1,10 +1,10 @@
 from messaging.messages.Message import Message
 
 
-class TwoDPose(Message):
+class TwoDPoseMsg(Message):
     def __init__(self):
         super().__init__()
-        self._message_type = TwoDPose
+        self._message_type = TwoDPoseMsg
         self.x = 0
         self.y = 0
         self.theta = 0

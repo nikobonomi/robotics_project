@@ -1,10 +1,10 @@
 from messaging.messages.Message import Message
 
 
-class ProximitySensorMessage(Message):
+class ProximitySensorMsg(Message):
     def __init__(self):
         super().__init__()
-        self._message_type = ProximitySensorMessage
+        self._message_type = ProximitySensorMsg
         self.sensor_value = -1
         self.sensor_name = "unknown"
 

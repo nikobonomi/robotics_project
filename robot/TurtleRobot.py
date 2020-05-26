@@ -5,8 +5,8 @@ import numpy as np
 
 # questo non va bene, da rivedere
 from messaging.messages.Message import Message
-from messaging.messages.ProximitySensorMessage import ProximitySensorMessage
-from messaging.messages.TwoDPose import TwoDPose
+from messaging.messages.ProximitySensorMsg import ProximitySensorMsg
+from messaging.messages.TwoDPoseMsg import TwoDPoseMsg
 from robot.TwoDRobot import TwoDRobot
 
 
@@ -76,7 +76,7 @@ class TurtleRobot(TwoDRobot):
 
         cartesian_pose = self.get_cartesian_pose()
         # messaggio di posa del robot
-        pose_message = TwoDPose()
+        pose_message = TwoDPoseMsg()
         pose_message.x = cartesian_pose.x
         pose_message.y = cartesian_pose.y
         pose_message.theta = cartesian_pose.theta
@@ -85,7 +85,7 @@ class TurtleRobot(TwoDRobot):
 
         # ora guardo per ogni sensore
         for sensor in self.sensors:
-            sensor_message = ProximitySensorMessage()
+            sensor_message = ProximitySensorMsg()
             sensor_message.sensor_value = sensor.sensor_result
             sensor_message.sensor_name = sensor.name
             results.append(sensor_message)

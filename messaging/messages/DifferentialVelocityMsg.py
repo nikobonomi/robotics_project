@@ -1,7 +1,7 @@
 from messaging.messages.Message import Message
 
 
-class DifferentialVelocity(Message):
+class DifferentialVelocityMsg(Message):
     def __init__(self):
         super().__init__()
         self.wheel_right = 0

@@ -6,7 +6,7 @@ import math
 
 # estraggo la posa dalla matrice
 from messaging.messages.Message import Message
-from messaging.messages.TwoDPose import TwoDPose
+from messaging.messages.TwoDPoseMsg import TwoDPoseMsg
 from sensor.Sensor import Sensor
 
 

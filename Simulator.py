@@ -5,8 +5,8 @@ from environment.Hole import Hole
 from environment.Obstacle import Obstacle
 from environment.SquareWall import SquareWall
 from messaging.MessagingServer import MessagingServer
-from messaging.messages.ProximitySensorMessage import ProximitySensorMessage
-from messaging.messages.Velocity import Velocity
+from messaging.messages.ProximitySensorMsg import ProximitySensorMsg
+from messaging.messages.VelocityMsg import VelocityMsg
 from robot.TurtleRobot import TurtleRobot
 from sensor.ProximitySensor import ProximitySensor
 from utils.RateKeeper import RateKeeper
@@ -57,7 +57,7 @@ class Simulator:
         # print(message)
         # per il momento c'è solo 1 robot... il tartaruga
         # quindi mi assicuro di ricevere un messaggio che sia adatto a quel robot
-        if message.is_type(Velocity):
+        if message.is_type(VelocityMsg):
             self.robot.vel_linear = message.x
             self.robot.vel_angular = message.z
 
