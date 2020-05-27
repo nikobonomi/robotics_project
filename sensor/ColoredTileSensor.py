@@ -10,7 +10,7 @@ class ColoredTileSensor(Sensor):
     fill = 'yellow'
 
     def __init__(self, callback: Callable, position: TwoDPoint, name: str, color: str = None):
-        vertexes = [-15, -15, -15, 15, 15, -15, 15, 15, -15, -15]
+        vertexes = [-15, 0, 15, 0]
         Sensor.__init__(self, callback, vertexes, position, name)
         self._target: Type = ColoredTile
         self._color: str = color
