@@ -123,7 +123,6 @@ class ClosedLoopController:
 
     def is_facing_wall(self, tol=.1):
         err_center = abs(self.proximity["f_r"] - self.proximity["f_l"])
-        print(str(err_center))
         if err_center == 0.:
             return False
 

@@ -4,7 +4,6 @@ from Graphics import SreGui
 from environment.Hole import Hole
 from environment.Obstacle import Obstacle
 from environment.PolygonWall import PolygonWall
-from environment.SquareWall import SquareWall
 from messaging.MessagingServer import MessagingServer
 from messaging.messages.ProximitySensorMsg import ProximitySensorMsg
 from messaging.messages.VelocityMsg import VelocityMsg
@@ -32,23 +31,23 @@ class Simulator:
         # self.robot.vel_left = 10
         # self.robot.vel_right = 11
         self.robot = TurtleRobot()
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [10, 0, 30, 0], TwoDPoint(10, 0), "f_c")
+        temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [10, 0, 30, 0], TwoDPoint(10, 0), "f_c")
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [5, -10, 28, -14], TwoDPoint(10, -10), "f_r")
+        temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [5, -10, 28, -14], TwoDPoint(10, -10), "f_r")
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [5, 10, 28, 14], TwoDPoint(10, 10), "f_l")
+        temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [5, 10, 28, 14], TwoDPoint(10, 10), "f_l")
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [-15, 8, -25, 8], TwoDPoint(-15, 8), "b_r")
+        temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [-15, 8, -25, 8], TwoDPoint(-15, 8), "b_r")
         self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [-15, -8, -25, -8], TwoDPoint(-15, -8), "b_l")
+        temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [-15, -8, -25, -8], TwoDPoint(-15, -8), "b_l")
         self.robot.sensors.append(temp_sensor)
         temp_sensor = HoleSensor(self.gui.sensor_callback, TwoDPoint(10, 0), "h")
         self.robot.sensors.append(temp_sensor)
         temp_sensor = ColoredTileSensor(self.gui.sensor_callback, TwoDPoint(10, 0), "c_t")
         self.robot.sensors.append(temp_sensor)
         temp_obstacle = PolygonWall("obstacle 1", [50, 88, 162, -68, 311, -67, 196, 103, 216, 2])
-        temp_obstacle2 = SquareWall("obstacle 2", 100, 110, 20, 20)
-        temp_obstacle3 = SquareWall("obstacle 3", -100, 100, 20, 20)
+        temp_obstacle2 = PolygonWall.square_wall("obstacle 2", 100, 110, 20, 20)
+        temp_obstacle3 = PolygonWall.square_wall("obstacle 3", -100, 100, 20, 20)
         temp_hole = Hole("ciao", 50, -10, 30, 30)
         self.gui.new_robot(self.robot)
         self.gui.new_tile(temp_obstacle)
