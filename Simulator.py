@@ -9,6 +9,7 @@ from messaging.MessagingServer import MessagingServer
 from messaging.messages.ProximitySensorMsg import ProximitySensorMsg
 from messaging.messages.VelocityMsg import VelocityMsg
 from robot.TurtleRobot import TurtleRobot
+from sensor.ColoredTileSensor import ColoredTileSensor
 from sensor.HoleSensor import HoleSensor
 from sensor.ProximitySensor import ProximitySensor
 from utils.RateKeeper import RateKeeper
@@ -42,6 +43,8 @@ class Simulator:
         temp_sensor = ProximitySensor(Obstacle, self.gui.sensor_callback, [-15, -8, -25, -8], TwoDPoint(-15, -8), "b_l")
         self.robot.sensors.append(temp_sensor)
         temp_sensor = HoleSensor(self.gui.sensor_callback, TwoDPoint(10, 0), "h_l")
+        self.robot.sensors.append(temp_sensor)
+        temp_sensor = ColoredTileSensor(self.gui.sensor_callback, TwoDPoint(10, 0), "h_l")
         self.robot.sensors.append(temp_sensor)
         temp_obstacle = PolygonWall("obstacle 1", [50, 88, 162, -68, 311, -67, 196, 103, 216, 2])
         temp_obstacle2 = SquareWall("obstacle 2", 100, 110, 20, 20)
