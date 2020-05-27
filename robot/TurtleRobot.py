@@ -84,9 +84,6 @@ class TurtleRobot(TwoDRobot):
 
         # ora guardo per ogni sensore
         for sensor in self.sensors:
-            sensor_message = ProximitySensorMsg()
-            sensor_message.sensor_value = sensor.sensor_result
-            sensor_message.sensor_name = sensor.name
-            results.append(sensor_message)
+            results.append(sensor.get_sensor_msg())
 
         return results

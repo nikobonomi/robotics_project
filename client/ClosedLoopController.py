@@ -32,6 +32,8 @@ class ClosedLoopController:
             self.pose = message
         if message.is_type(ProximitySensorMsg):
             self.proximity[message.sensor_name] = message.sensor_value
+        if message.is_type(ProximitySensorMsg):
+            self.proximity[message.sensor_name] = message.sensor_value
 
     def get_pose(self):
         return self.pose
