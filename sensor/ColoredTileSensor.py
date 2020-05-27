@@ -7,8 +7,10 @@ from utils.SupportClasses import TwoDPoint
 
 
 class ColoredTileSensor(Sensor):
+    fill = 'yellow'
+
     def __init__(self, callback: Callable, position: TwoDPoint, name: str, color: str = None):
-        vertexes = [0, 0, 5, 5, -5, -5]
+        vertexes = [-15, -15, -15, 15, 15, -15, 15, 15, -15, -15]
         Sensor.__init__(self, callback, vertexes, position, name)
         self._target: Type = ColoredTile
         self._color: str = color

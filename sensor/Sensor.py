@@ -5,6 +5,8 @@ from utils.SupportClasses import TwoDPoint
 
 
 class Sensor(object):
+    fill = "red"
+
     def __init__(self, callback: Callable, vertexes: List[int], position: TwoDPoint, name: str):
         self._get_candidates: Callable = callback
         self._candidates: List[Tile] = []

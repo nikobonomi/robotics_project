@@ -33,7 +33,7 @@ class SreGui:
         self.update_canvas()
 
     def new_sensor(self, sensor: Sensor):
-        self._sensors[sensor] = self._canvas.create_line(sensor.vertexes, fill="red", width=1)
+        self._sensors[sensor] = self._canvas.create_line(sensor.vertexes, fill=sensor.fill, width=1)
         self.update_canvas()
 
     def new_tile(self, tile: Tile):

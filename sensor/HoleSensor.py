@@ -7,8 +7,10 @@ from utils.SupportClasses import TwoDPoint
 
 
 class HoleSensor(Sensor):
+    fill = 'lime'
+
     def __init__(self, callback: Callable, position: TwoDPoint, name: str):
-        vertexes = [0, 0, 20, 20, -20, -20]
+        vertexes = [-15, -15, -15, 15, 15, -15, 15, 15, -15, -15]
         Sensor.__init__(self, callback, vertexes, position, name)
         self._target: Type = Hole
         self.sensor_result: bool = False
