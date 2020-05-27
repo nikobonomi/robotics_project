@@ -1,4 +1,5 @@
 from environment.Hole import Hole
+from messaging.messages.HoleSensorMsg import HoleSensorMsg
 from sensor.Sensor import Sensor
 from environment.Tile import Tile
 from typing import Callable, List, Type
@@ -23,3 +24,6 @@ class HoleSensor(Sensor):
             if isinstance(tile, self._target):
                 self.sensor_result: bool = True
                 return
+
+    def get_sensor_msg(self) -> HoleSensorMsg:
+        return HoleSensorMsg(self.sensor_result, self.name)
