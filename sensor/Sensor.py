@@ -11,7 +11,7 @@ class Sensor(object):
         self.vertexes: List[int] = vertexes
         self.pose_vertexes: List[int] = vertexes
         self._sensor_position: TwoDPoint = position
-        self.was_found: bool = False
+        self.sensor_result = None
         self.name: str = name
 
     def step(self):
