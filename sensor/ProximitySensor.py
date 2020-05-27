@@ -1,3 +1,4 @@
+from messaging.messages.ProximitySensorMsg import ProximitySensorMsg
 from sensor.Sensor import Sensor
 from environment.Tile import Tile
 from typing import Callable, List, Type
@@ -53,3 +54,6 @@ class ProximitySensor(Sensor):
                 # print("intersezione a distanza " + str(dist) + " al punto " + str(x) + "," + str(y))
         # print("intersezione a distanza " + str(return_dist))
         return return_dist
+
+    def get_sensor_msg(self) -> ProximitySensorMsg:
+        return ProximitySensorMsg(self.sensor_result, self.name)

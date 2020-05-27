@@ -18,3 +18,6 @@ class Sensor(object):
 
     def step(self):
         raise NotImplementedError
+
+    def get_sensor_msg(self):
+        raise NotImplementedError
