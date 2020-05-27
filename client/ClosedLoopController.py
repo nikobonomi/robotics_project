@@ -2,6 +2,8 @@ import numpy as np
 import random
 
 from messaging.MessagingClient import MessagingClient
+from messaging.messages.ColoredTileSensorMsg import ColoredTileSensorMsg
+from messaging.messages.HoleSensorMsg import HoleSensorMsg
 from messaging.messages.ProximitySensorMsg import ProximitySensorMsg
 from messaging.messages.TwoDPoseMsg import TwoDPoseMsg
 from messaging.messages.VelocityMsg import VelocityMsg
@@ -26,14 +28,24 @@ class ClosedLoopController:
             "f_l": -1,
         }
 
+        self.hole = {
+            "h": False
+        }
+
+        self.colored = {
+            "c_t": False
+        }
+
     def handle_server_message(self, message):
         # mi assicuro che sia il messaggio giusto
         if message.is_type(TwoDPoseMsg):
             self.pose = message
+        if message.is_type(HoleSensorMsg):
+            self.hole[message.sensor_name] = message.sensor_value
         if message.is_type(ProximitySensorMsg):
             self.proximity[message.sensor_name] = message.sensor_value
-        if message.is_type(ProximitySensorMsg):
-            self.proximity[message.sensor_name] = message.sensor_value
+        if message.is_type(ColoredTileSensorMsg):
+            self.colored[message.sensor_name] = message.sensor_value
 
     def get_pose(self):
         return self.pose
@@ -53,15 +65,24 @@ class ClosedLoopController:
                 return True
         return False
 
+    def is_near_hole(self):
+        for key, value in self.hole.items():
+            if value:
+                return True
+        return False
+
     def step_straight(self):
         # rospy.loginfo("Wall is near: %s" % self.is_near_wall())
         if self.is_near_wall():
             print("Wall crash prevention system active")
-            return
+            x_vel= 0
+        elif self.is_near_hole():
+            print("Hole fall prevention system active")
+            x_vel= 0
         else:
             x_vel = self.x_pid.compute(50)
 
-            self.set_speed(x_vel)
+        self.set_speed(x_vel)
 
     def step_to_point(self, goal):
         distance_error = ErrorComputing.euclidean_distance(self.pose, goal)
@@ -111,7 +132,6 @@ class ClosedLoopController:
     def is_sensor_back_wall(self, tol=.1):
 
         err_center = abs(self.proximity["b_r"] - self.proximity["b_l"])
-        print(str(err_center))
         if err_center == 0.:
             return False
 
