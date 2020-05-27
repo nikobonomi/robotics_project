@@ -1,6 +1,5 @@
 from typing import List
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 # questo non va bene, da rivedere
@@ -91,37 +90,3 @@ class TurtleRobot(TwoDRobot):
             results.append(sensor_message)
 
         return results
-
-    # lo mette in posizione x e y con angolazione theta
-    # sfruttanto la matrice pose
-    def draw_robot(self, ax=None, alpha=0.5):
-        """ Draw robot at f, with wheel distance from center l,
-        on axis ax (if provided) or on plt.gca() otherwise.
-        if l is None, no wheels are drawn"""
-
-        # f = self.mk_tr(self.x, self.y) @ self.mk_rot(self.theta)
-        f = self.pose
-
-        if not ax:
-            ax = plt.gca()
-
-        robot = ([[-1, 2, -1, -1],  # x
-                  [-1, 0, 1, -1]])  # y
-        robot = np.array(robot)
-        robot = np.vstack((
-            robot * 0.1,  # scale by 0.1 units
-            np.ones((1, robot.shape[1]))))
-
-        robot_t = f @ robot
-
-        wheel_l = np.array([
-            [-0.05, 0.05],
-            [self.length, self.length],
-            [1, 1]
-        ])
-        wheel_r = wheel_l * np.array([[1, -1, 1]]).T
-        wheel_lt = f @ wheel_l
-        wheel_rt = f @ wheel_r
-        ax.plot(robot_t[0, :], robot_t[1, :], 'k-', alpha=alpha)
-        ax.plot(wheel_lt[0, :], wheel_lt[1, :], 'k-', alpha=alpha)
-        ax.plot(wheel_rt[0, :], wheel_rt[1, :], 'k-', alpha=alpha)
