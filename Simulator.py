@@ -1,6 +1,7 @@
 import time
 
 from Graphics import SreGui
+from environment.ColoredTile import ColoredTile
 from environment.Hole import Hole
 from environment.Obstacle import Obstacle
 from environment.PolygonWall import PolygonWall
@@ -14,11 +15,11 @@ from sensor.ProximitySensor import ProximitySensor
 from utils.RateKeeper import RateKeeper
 from utils.SupportClasses import TwoDPoint
 
-RATE = 20  # hz
+RATE = 15  # hz
 
 
 class Simulator:
-    def __init__(self):
+    def __init__(self, world_setup):
 
         self.messaging = MessagingServer()
         # faccio la subscription agli update dei client
@@ -31,29 +32,46 @@ class Simulator:
         # self.robot.vel_left = 10
         # self.robot.vel_right = 11
         self.robot = TurtleRobot()
-        temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [10, 0, 30, 0], TwoDPoint(10, 0), "f_c")
-        self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [5, -10, 28, -14], TwoDPoint(10, -10), "f_r")
-        self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [5, 10, 28, 14], TwoDPoint(10, 10), "f_l")
-        self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [-15, 8, -25, 8], TwoDPoint(-15, 8), "b_r")
-        self.robot.sensors.append(temp_sensor)
-        temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [-15, -8, -25, -8], TwoDPoint(-15, -8), "b_l")
-        self.robot.sensors.append(temp_sensor)
-        temp_sensor = HoleSensor(self.gui.sensor_callback, TwoDPoint(10, 0), "h")
-        self.robot.sensors.append(temp_sensor)
-        temp_sensor = ColoredTileSensor(self.gui.sensor_callback, TwoDPoint(10, 0), "c_t")
-        self.robot.sensors.append(temp_sensor)
-        temp_obstacle = PolygonWall("obstacle 1", [50, 88, 162, -68, 311, -67, 196, 103, 216, 2])
-        temp_obstacle2 = PolygonWall.square_wall("obstacle 2", 100, 110, 20, 20)
-        temp_obstacle3 = PolygonWall.square_wall("obstacle 3", -100, 100, 20, 20)
-        temp_hole = Hole("ciao", 50, -10, 30, 30)
+
+        if world_setup > 0:
+            temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [10, 0, 30, 0], TwoDPoint(10, 0), "f_c")
+            self.robot.sensors.append(temp_sensor)
+
+            temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [5, -10, 28, -14], TwoDPoint(10, -10), "f_r")
+            self.robot.sensors.append(temp_sensor)
+
+            temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [5, 10, 28, 14], TwoDPoint(10, 10), "f_l")
+            self.robot.sensors.append(temp_sensor)
+
+            temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [-15, 8, -25, 8], TwoDPoint(-15, 8), "b_r")
+            self.robot.sensors.append(temp_sensor)
+
+            temp_sensor = ProximitySensor(PolygonWall, self.gui.sensor_callback, [-15, -8, -25, -8], TwoDPoint(-15, -8), "b_l")
+            self.robot.sensors.append(temp_sensor)
+
+            if world_setup > 1:
+                temp_sensor = HoleSensor(self.gui.sensor_callback, TwoDPoint(10, 0), "h")
+                self.robot.sensors.append(temp_sensor)
+
+                temp_sensor = ColoredTileSensor(self.gui.sensor_callback, TwoDPoint(10, 0), "c_t")
+                self.robot.sensors.append(temp_sensor)
+
+            temp_obstacle4 = PolygonWall("World end walls", [-390, 20, -20, 290, 390, -40, 100, -100, 20, -290])
+
+            temp_hole = Hole("ciao", 300, -15, 30, 30)
+            green_tile = ColoredTile(80, -15, 30, 30, "#0f0")
+            red_tile = ColoredTile(180, -40, 10, 60, "#f00")
+            x_tile = ColoredTile(230, -35, 30, 40, "#ff0")
+
+            if world_setup < 2:
+                self.gui.new_tile(temp_obstacle4)
+            else:
+                self.gui.new_tile(temp_hole)
+                self.gui.new_tile(green_tile)
+                self.gui.new_tile(red_tile)
+                self.gui.new_tile(x_tile)
+
         self.gui.new_robot(self.robot)
-        self.gui.new_tile(temp_obstacle)
-        self.gui.new_tile(temp_obstacle2)
-        self.gui.new_tile(temp_obstacle3)
-        self.gui.new_tile(temp_hole)
 
         # inizializzo il clock manager
         # self._clock = ClockManager(1, self._step)

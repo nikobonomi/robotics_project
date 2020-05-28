@@ -2,7 +2,7 @@ from messaging.messages.Message import Message
 
 
 class ColoredTileSensorMsg(Message):
-    def __init__(self, value: bool = False, color: str = "", name: str = "unknown"):
+    def __init__(self, value: bool = False, name: str = "unknown", color: str = ""):
         super().__init__()
         self._message_type = ColoredTileSensorMsg
         self.sensor_value = value

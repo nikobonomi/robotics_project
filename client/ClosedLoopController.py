@@ -36,6 +36,8 @@ class ClosedLoopController:
             "c_t": False
         }
 
+        self.sensor_color = ""
+
     def handle_server_message(self, message):
         # mi assicuro che sia il messaggio giusto
         if message.is_type(TwoDPoseMsg):
@@ -46,6 +48,7 @@ class ClosedLoopController:
             self.proximity[message.sensor_name] = message.sensor_value
         if message.is_type(ColoredTileSensorMsg):
             self.colored[message.sensor_name] = message.sensor_value
+            self.sensor_color = message.sensor_color
 
     def get_pose(self):
         return self.pose
@@ -71,16 +74,19 @@ class ClosedLoopController:
                 return True
         return False
 
-    def step_straight(self):
+    def step_straight(self, vel = 10):
         # rospy.loginfo("Wall is near: %s" % self.is_near_wall())
         if self.is_near_wall():
             print("Wall crash prevention system active")
-            x_vel= 0
+            x_vel = 0
         elif self.is_near_hole():
             print("Hole fall prevention system active")
-            x_vel= 0
+            x_vel = 0
         else:
-            x_vel = self.x_pid.compute(50)
+            x_vel = vel
+
+        if self.colored['c_t']:
+            print("sensed color" + self.sensor_color)
 
         self.set_speed(x_vel)
 
@@ -121,14 +127,14 @@ class ClosedLoopController:
         z_vel = self.z_pid.compute(error)
         self.set_speed(0, z_vel)
 
-    def is_facing_wall(self, tol=.1):
+    def is_facing_wall(self, tol=.5):
         err_center = abs(self.proximity["f_r"] - self.proximity["f_l"])
         if err_center == 0.:
             return False
 
         return err_center < tol
 
-    def is_sensor_back_wall(self, tol=.1):
+    def is_sensor_back_wall(self, tol=.5):
 
         err_center = abs(self.proximity["b_r"] - self.proximity["b_l"])
         if err_center == 0.:

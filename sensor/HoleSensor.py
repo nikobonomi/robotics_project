@@ -11,7 +11,7 @@ class HoleSensor(Sensor):
     fill = 'lime'
 
     def __init__(self, callback: Callable, position: TwoDPoint, name: str):
-        vertexes = [-15, 0, 25, 0]
+        vertexes = [20, -5, 20, 5]
         Sensor.__init__(self, callback, vertexes, position, name)
         self._target: Type = Hole
         self.sensor_result: bool = False

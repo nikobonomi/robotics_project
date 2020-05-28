@@ -31,7 +31,7 @@ class WallLover:
 
     def step(self):
         if self.state == WallLoverState.SearchingWall:
-            self.controller.step_straight()
+            self.controller.step_straight(100)
             if self.controller.is_near_wall():
                 print("The wall is near")
                 self.controller.set_speed()
