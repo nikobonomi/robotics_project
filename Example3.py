@@ -18,7 +18,8 @@ class Controller:
         self.target_theta = 0
 
     def step(self):
-        self.controller.step_straight(30)
+        self.controller.step_straight(20)
+        controller.rate_keeper.wait_cycle()
 
 
 controller = Controller(10)
