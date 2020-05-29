@@ -1,3 +1,5 @@
+from random import random
+
 from messaging.messages.ProximitySensorMsg import ProximitySensorMsg
 from sensor.Sensor import Sensor
 from environment.Tile import Tile
@@ -8,10 +10,11 @@ from utils.SupportClasses import TwoDPoint
 
 
 class ProximitySensor(Sensor):
-    def __init__(self, target: Type, callback: Callable, vertexes: List[int], position: TwoDPoint, name):
-        Sensor.__init__(self, callback, vertexes, position, name)
+    def __init__(self, target: Type, callback: Callable, vertexes: List[int], position: TwoDPoint, name, uncertainty: float = None, systematic: float = None):
+        super().__init__(callback, vertexes, position, name, uncertainty)
         self._target: Type = target
         self.sensor_result: float = -1  # rappresenta la distanza dal tile più vicino
+        self._systematic: float = systematic
 
     def step(self):
         self._candidates: List[Tile] = self._get_candidates(self)
@@ -24,6 +27,13 @@ class ProximitySensor(Sensor):
                 temp = self._target_distance(tile)
                 if temp < self.sensor_result:
                     self.sensor_result = temp
+
+        if self._uncertainty is not None:
+            if random.randrange(100) < self._uncertainty*100:
+                self.sensor_result = random.randrange(-100, 100)
+
+        if self._systematic is not None:
+            self.sensor_result = (self.sensor_result * (1 + self._systematic))
 
     def _target_distance(self, target: Tile) -> float:
         # cerco su tutti i lati del poligono del tile se c'è un'intersezione
